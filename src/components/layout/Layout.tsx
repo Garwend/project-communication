@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { useSession } from "next-auth/react";
 
 import Header from "./Header";
 import Sidebar from "./Sidebar";
@@ -8,15 +9,27 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
+  const { status } = useSession();
+
+  if (status === "authenticated") {
+    return (
+      <>
+        <Header />
+        <main className="mt-12 flex flex-1">
+          <Sidebar />
+          <section className="flex-auto overflow-auto bg-background p-2">
+            {children}
+          </section>
+        </main>
+      </>
+    );
+  }
+
   return (
-    <>
-      <Header />
-      <main className="mt-12 flex flex-1">
-        <Sidebar />
-        <section className="flex-auto overflow-auto bg-background p-2">
-          {children}
-        </section>
-      </main>
-    </>
+    <main className="flex h-screen">
+      <section className="flex flex-auto items-center justify-center overflow-auto bg-background p-2">
+        {children}
+      </section>
+    </main>
   );
 }

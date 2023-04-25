@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { signOut } from "next-auth/react";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { LogOut, User, Moon } from "lucide-react";
@@ -45,7 +46,7 @@ export default function Menu() {
           Tryb ciemny
           <Switch checked={darkMode} className="ml-6" />
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => void signOut()}>
           <LogOut className="mr-2 h-4 w-4" />
           Wyloguj
         </DropdownMenuItem>

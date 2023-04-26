@@ -14,6 +14,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
+import { toastError } from "~/components/ui/toast";
 
 import { api } from "~/utils/api";
 
@@ -42,6 +43,9 @@ export default function Profile() {
     async onSuccess(data) {
       reset({ name: data.name ?? "" });
       await update();
+    },
+    onError() {
+      toastError("Nie udało się zaktualizować twoich danych");
     },
   });
 

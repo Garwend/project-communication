@@ -2,6 +2,7 @@ import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
+import { Toaster } from "react-hot-toast";
 
 import Layout from "~/components/layout/Layout";
 
@@ -23,6 +24,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <SessionProvider session={session}>
         <Layout>
           <Component {...pageProps} />
+          <Toaster position="bottom-right" reverseOrder={false} />
         </Layout>
       </SessionProvider>
     </>

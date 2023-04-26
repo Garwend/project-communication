@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
@@ -38,8 +39,10 @@ export default function Menu() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>
-          <User className="mr-2 h-4 w-4" /> Profil
+        <DropdownMenuItem asChild>
+          <Link href="/profile">
+            <User className="mr-2 h-4 w-4" /> Profil
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={toggleDarkMode}>
           <Moon className="mr-2 h-4 w-4" />

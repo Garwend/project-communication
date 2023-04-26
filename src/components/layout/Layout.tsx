@@ -9,9 +9,9 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  const { status } = useSession();
+  const { data: session } = useSession();
 
-  if (status === "authenticated") {
+  if (session) {
     return (
       <>
         <Header />

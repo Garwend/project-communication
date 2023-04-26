@@ -43,10 +43,17 @@ declare module "next-auth/jwt" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    jwt: ({ token, user }) => {
+    jwt: async ({ token, user, trigger }) => {
       if (user) {
         token.id = user.id;
         token.email = user.email;
+      }
+
+      if (trigger === "update") {
+        const updateUser = await prisma.user.findFirst({
+          where: { id: token.id },
+        });
+        token.name = updateUser?.name;
       }
 
       return token;

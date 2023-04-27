@@ -16,7 +16,7 @@ export function NavLink({ name, href, icon: Icon }: Props) {
   return (
     <Link href={href} legacyBehavior>
       <a
-        data-active={router.pathname === href ? true : null}
+        data-active={router.asPath === href ? true : null}
         className={cn(
           navigationMenuTriggerStyle(),
           "flex w-full justify-start hover:underline"

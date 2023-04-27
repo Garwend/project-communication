@@ -8,6 +8,7 @@ import {
   NavigationMenuLink,
   navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
+import List from "~/components/projects/List";
 import { cn } from "~/lib/utils";
 
 export default function Sidebar() {
@@ -30,6 +31,7 @@ export default function Sidebar() {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
+      <List />
     </aside>
   );
 }

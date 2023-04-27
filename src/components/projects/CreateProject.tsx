@@ -32,12 +32,14 @@ const schema: ZodType<FormData> = z.object({
 });
 
 export default function CreateProject() {
+  const utils = api.useContext();
   const [open, setOpen] = useState(false);
 
   const mutation = api.projects.createProject.useMutation({
     onSuccess() {
       reset();
       setOpen(false);
+      void utils.projects.getAll.refetch();
     },
     onError() {
       toastError("nie udało się utworzyć nowego projektu");

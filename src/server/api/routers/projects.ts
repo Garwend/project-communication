@@ -2,6 +2,11 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const projectRouter = createTRPCRouter({
+  getAll: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.project.findMany({
+      where: { owner: { id: ctx.session.user.id } },
+    });
+  }),
   createProject: protectedProcedure
     .input(
       z.object({

@@ -15,9 +15,9 @@ export default function Layout({ children }: Props) {
     return (
       <>
         <Header />
-        <main className="mt-12 flex flex-1">
+        <main className="mt-12 flex h-[calc(100vh-3rem)] flex-1">
           <Sidebar />
-          <section className="flex-auto overflow-auto bg-background p-2">
+          <section className="h-full flex-auto bg-background p-2">
             {children}
           </section>
         </main>

@@ -12,7 +12,7 @@ export default function List() {
     <section>
       <Separator className="my-4" />
       <Header />
-      <div className="mt-4 flex flex-col">
+      <div className="mt-4 flex flex-col gap-2">
         {query.isLoading ? <SkeletonProjectList /> : null}
         {query.data
           ? query.data.map((project) => (
@@ -31,10 +31,10 @@ export default function List() {
 function SkeletonProjectList() {
   return (
     <>
-      <Skeleton className="mb-2 h-8 w-full" />
-      <Skeleton className="mb-2 h-8 w-full" />
-      <Skeleton className="mb-2 h-8 w-full" />
-      <Skeleton className="mb-2 h-8 w-full" />
+      <Skeleton className="h-8 w-full" />
+      <Skeleton className="h-8 w-full" />
+      <Skeleton className="h-8 w-full" />
+      <Skeleton className="h-8 w-full" />
       <Skeleton className="h-8 w-full" />
     </>
   );

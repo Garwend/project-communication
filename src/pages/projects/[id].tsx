@@ -1,6 +1,10 @@
 import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import ProjectStage from "~/components/projects/ProjectStage";
+import FilesList from "~/components/projects/FilesList";
+import WaitingForList from "~/components/projects/WaitingForList";
+import InviteUser from "~/components/projects/InviteUser";
 import { api } from "../../utils/api";
 
 export default function ProjectPage() {
@@ -20,18 +24,23 @@ export default function ProjectPage() {
   }
 
   return (
-    <ScrollArea className="h-full">
-      <header>
+    <ScrollArea className="h-full pr-4">
+      <header className="flex flex-row items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">
           {query.data?.name}
         </h1>
+        <InviteUser />
       </header>
-      <Separator className="my-4" />
+      <Separator className="mb-4 mt-2" />
       <section className="flex flex-row">
         <section className="flex-[0_0_50%]">
           <p>{query.data?.description}</p>
         </section>
-        <section className="flex-[0_0_50%]"></section>
+        <section className="flex flex-[0_0_50%] flex-col items-center gap-4">
+          <ProjectStage />
+          <FilesList />
+          <WaitingForList />
+        </section>
       </section>
     </ScrollArea>
   );

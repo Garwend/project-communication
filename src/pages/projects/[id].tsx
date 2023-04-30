@@ -4,7 +4,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import ProjectStage from "~/components/projects/ProjectStage";
 import FilesList from "~/components/projects/FilesList";
 import WaitingForList from "~/components/projects/WaitingForList";
-import InviteUser from "~/components/projects/InviteUser";
+import InviteUser from "~/components/invites/InviteUser";
 import { api } from "../../utils/api";
 
 export default function ProjectPage() {
@@ -25,11 +25,11 @@ export default function ProjectPage() {
 
   return (
     <ScrollArea className="h-full pr-4">
-      <header className="flex flex-row items-center justify-between">
+      <header className="flex h-10 flex-row items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">
           {query.data?.name}
         </h1>
-        <InviteUser />
+        <InviteUser id={id} ownerId={query.data.ownerId} />
       </header>
       <Separator className="mb-4 mt-2" />
       <section className="flex flex-row">

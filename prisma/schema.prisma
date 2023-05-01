@@ -79,6 +79,7 @@ model Project {
     createdAt    DateTime          @default(now())
     participants UsersInProjects[]
     invites      Invite[]
+    stages       ProjectStage[]
 }
 
 model Invite {
@@ -90,6 +91,14 @@ model Invite {
     createdAt DateTime @default(now())
 
     @@unique([userId, projectId])
+}
+
+model ProjectStage {
+    id        String   @id @default(cuid())
+    stage     String
+    project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId String
+    createdAt DateTime @default(now())
 }
 
 model UsersInProjects {

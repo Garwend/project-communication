@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import ProjectStage from "~/components/projects/ProjectStage";
+import ProjectStage from "~/components/projects/project-stage/ProjectStage";
 import FilesList from "~/components/projects/FilesList";
 import WaitingForList from "~/components/projects/WaitingForList";
 import InviteUser from "~/components/invites/InviteUser";
@@ -45,7 +45,7 @@ export default function ProjectPage() {
           <p>{query.data?.description}</p>
         </section>
         <section className="flex flex-[0_0_50%] flex-col items-center gap-4">
-          <ProjectStage />
+          <ProjectStage id={id} />
           <FilesList />
           <WaitingForList />
         </section>

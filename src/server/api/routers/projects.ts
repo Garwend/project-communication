@@ -19,6 +19,16 @@ export const projectRouter = createTRPCRouter({
             user: true,
           },
         },
+        stages: {
+          select: {
+            id: true,
+            stage: true,
+          },
+          take: 1,
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
   }),

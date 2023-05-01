@@ -16,6 +16,8 @@ import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { toastError } from "~/components/ui/toast";
 
+import { getUserFirstLetters } from "~/lib/utils";
+
 import { api } from "~/utils/api";
 
 type FormData = {
@@ -30,7 +32,7 @@ const schema: ZodType<FormData> = z.object({
 });
 
 export default function Profile() {
-  const { update } = useSession();
+  const { update, data: session } = useSession();
 
   const query = api.users.getCurrentUser.useQuery(undefined, {
     refetchOnWindowFocus: false,
@@ -83,7 +85,11 @@ export default function Profile() {
         <CardContent className="flex flex-col gap-6">
           <Avatar className="h-20 w-20 self-center">
             <AvatarImage src="" />
-            <AvatarFallback className="text-xl">CN</AvatarFallback>
+            <AvatarFallback className="text-xl">
+              {getUserFirstLetters(
+                session?.user.name ?? session?.user.email ?? ""
+              )}
+            </AvatarFallback>
           </Avatar>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="name">Nazwa</Label>

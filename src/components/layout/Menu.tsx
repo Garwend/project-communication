@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useAtom } from "jotai";
@@ -14,9 +15,12 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
+import { getUserFirstLetters } from "~/lib/utils";
+
 const darkModeAtom = atomWithStorage("darkMode", false);
 
 export default function Menu() {
+  const { data: session } = useSession();
   const [darkMode, setDarkMode] = useAtom(darkModeAtom);
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
@@ -35,7 +39,11 @@ export default function Menu() {
       <DropdownMenuTrigger asChild>
         <Avatar className="h-8 w-8 cursor-pointer">
           <AvatarImage src="" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>
+            {getUserFirstLetters(
+              session?.user.name ?? session?.user.email ?? ""
+            )}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

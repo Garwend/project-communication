@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const projectRouter = createTRPCRouter({
@@ -21,6 +22,10 @@ export const projectRouter = createTRPCRouter({
           { participants: { some: { userId: ctx.session.user.id } } },
         ],
       },
+      select: {
+        id: true,
+        name: true,
+      },
     });
   }),
   createProject: protectedProcedure
@@ -39,5 +44,66 @@ export const projectRouter = createTRPCRouter({
         },
       });
       return project;
+    }),
+  editProject: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string().min(1).max(64),
+        description: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const project = await ctx.prisma.project.findFirst({
+        where: { id: input.id },
+      });
+
+      if (project?.ownerId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+        });
+      }
+
+      const updatedProject = await ctx.prisma.project.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+          description: input.description,
+        },
+      });
+
+      return updatedProject;
+    }),
+  deleteProject: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ input, ctx }) => {
+      const project = await ctx.prisma.project.findFirst({
+        where: { id: input },
+      });
+
+      if (project?.ownerId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+        });
+      }
+
+      await ctx.prisma.project.delete({
+        where: { id: input },
+      });
+
+      return;
+    }),
+  leaveProject: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.usersInProjects.delete({
+        where: {
+          userId_projectId: { projectId: input, userId: ctx.session.user.id },
+        },
+      });
+
+      return;
     }),
 });

@@ -83,9 +83,9 @@ model Project {
 
 model Invite {
     id        String   @id @default(cuid())
-    user      User     @relation(fields: [userId], references: [id])
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId    String
-    project   Project  @relation(fields: [projectId], references: [id])
+    project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
     projectId String
     createdAt DateTime @default(now())
 
@@ -93,9 +93,9 @@ model Invite {
 }
 
 model UsersInProjects {
-    user       User     @relation(fields: [userId], references: [id])
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId     String
-    project    Project  @relation(fields: [projectId], references: [id])
+    project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
     projectId  String
     assignedAt DateTime @default(now())
 

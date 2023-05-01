@@ -27,7 +27,7 @@ export default function ParticipantsAvatarts({ id }: Props) {
           <AvatarImage src="" />
           <AvatarFallback>
             {getUserFirstLetters(
-              participant.user.email ?? participant.user.email ?? ""
+              participant.user.name ?? participant.user.email ?? ""
             )}
           </AvatarFallback>
         </Avatar>

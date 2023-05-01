@@ -39,6 +39,7 @@ export default function CreateProjectStage({ id, stage }: Props) {
       reset({ stage: data.stage });
       setOpen(false);
       void utils.projects.getById.refetch(id);
+      void utils.projectStages.getAll.refetch(id);
     },
     onError() {
       toastError("nie udało się zaktualizować etapu projektu");

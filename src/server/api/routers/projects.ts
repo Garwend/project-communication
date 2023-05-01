@@ -12,6 +12,14 @@ export const projectRouter = createTRPCRouter({
           { participants: { some: { userId: ctx.session.user.id } } },
         ],
       },
+      include: {
+        owner: true,
+        participants: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
   }),
   getAll: protectedProcedure.query(({ ctx }) => {

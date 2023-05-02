@@ -1,4 +1,6 @@
+import axios from "axios";
 import { useDropzone } from "react-dropzone";
+import { useMutation } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { ScrollArea } from "~/components/ui/scroll-area";
@@ -13,33 +15,53 @@ type Props = {
 
 export default function FilesList({ id }: Props) {
   const utils = api.useContext();
+
   const mutation = api.files.getUploadS3Url.useMutation({
-    onSuccess() {
-      void utils.projects.getById.refetch(id);
+    onSuccess(data) {
+      mutationFileUpload.mutate(data);
+    },
+    onError() {
+      toastError("Nie udało się dodać pliku");
     },
   });
 
-  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
-    noClick: true,
-    noKeyboard: true,
-    multiple: false,
-    maxFiles: 1,
-    maxSize: 5000000,
-    onDropAccepted(files) {
-      mutation.mutate({
-        projectId: id,
-        name: files[0]?.name ?? "",
-        type: files[0]?.type ?? "",
+  const mutationFileUpload = useMutation({
+    mutationFn: (url: string) => {
+      const file = acceptedFiles[0] as File;
+      return axios.put(url, file.slice(), {
+        headers: { "Content-Type": file.type },
       });
     },
-    onDropRejected(fileRejections) {
-      if (fileRejections[0]?.errors[0]?.code === "file-too-large") {
-        toastError("Plik jest zbyt duży maksymalny rozmiar to 5MB");
-      } else {
-        toastError("Nie można dodać tego pliku");
-      }
+    onSuccess() {
+      void utils.projects.getById.refetch(id);
+    },
+    onError() {
+      toastError("Nie udało się dodać pliku");
     },
   });
+
+  const { getRootProps, getInputProps, isDragActive, open, acceptedFiles } =
+    useDropzone({
+      noClick: true,
+      noKeyboard: true,
+      multiple: false,
+      maxFiles: 1,
+      maxSize: 5000000,
+      onDropAccepted(files) {
+        mutation.mutate({
+          projectId: id,
+          name: files[0]?.name ?? "",
+          type: files[0]?.type ?? "",
+        });
+      },
+      onDropRejected(fileRejections) {
+        if (fileRejections[0]?.errors[0]?.code === "file-too-large") {
+          toastError("Plik jest zbyt duży maksymalny rozmiar to 5MB");
+        } else {
+          toastError("Nie udało się dodać pliku");
+        }
+      },
+    });
 
   return (
     <Card className="w-3/4">

@@ -80,6 +80,7 @@ model Project {
     participants UsersInProjects[]
     invites      Invite[]
     stages       ProjectStage[]
+    files        File[]
 }
 
 model Invite {
@@ -98,6 +99,15 @@ model ProjectStage {
     stage     String
     project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
     projectId String
+    createdAt DateTime @default(now())
+}
+
+model File {
+    id        String   @id @default(cuid())
+    project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId String
+    name      String
+    type      String
     createdAt DateTime @default(now())
 }
 

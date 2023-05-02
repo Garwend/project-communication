@@ -46,7 +46,7 @@ export default function ProjectPage() {
         </section>
         <section className="flex flex-[0_0_50%] flex-col items-center gap-4">
           <ProjectStage id={id} />
-          <FilesList />
+          <FilesList id={id} />
           <WaitingForList />
         </section>
       </section>

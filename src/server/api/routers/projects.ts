@@ -29,6 +29,14 @@ export const projectRouter = createTRPCRouter({
             createdAt: "desc",
           },
         },
+        files: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            createdAt: true,
+          },
+        },
       },
     });
   }),

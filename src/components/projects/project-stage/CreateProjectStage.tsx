@@ -75,7 +75,7 @@ export default function CreateProjectStage({ id, stage }: Props) {
           <Edit className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] lg:max-w-[650px]">
         <DialogHeader>
           <DialogTitle>Zaktualizuj etap projektu</DialogTitle>
         </DialogHeader>

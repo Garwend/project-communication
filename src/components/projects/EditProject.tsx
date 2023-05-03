@@ -78,7 +78,7 @@ export default function EditProject({ id }: Props) {
           <span>Edytuj</span>
         </DropdownMenuItem>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] lg:max-w-[650px]">
         <DialogHeader>
           <DialogTitle>Edytuj projekt</DialogTitle>
         </DialogHeader>
@@ -97,7 +97,7 @@ export default function EditProject({ id }: Props) {
               <Label htmlFor="description">Opis</Label>
               <Textarea
                 id="description"
-                className="h-32 resize-none"
+                className="h-56 resize-none"
                 {...register("description")}
               />
             </div>

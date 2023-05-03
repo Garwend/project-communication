@@ -79,7 +79,7 @@ export default function CreateWaitingFor({ id }: Props) {
           <Plus className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] lg:max-w-[650px]">
         <DialogHeader>
           <DialogTitle>Dodaj rzecz na którą oczekujesz</DialogTitle>
         </DialogHeader>
@@ -98,7 +98,7 @@ export default function CreateWaitingFor({ id }: Props) {
               <Label htmlFor="description">Opis</Label>
               <Textarea
                 id="description"
-                className="h-32 resize-none"
+                className="h-56 resize-none"
                 {...register("description")}
               />
             </div>

@@ -89,13 +89,21 @@ export default function FilesList({ id }: Props) {
             >
               <input {...getInputProps()} />
               <h4 className="truncate text-2xl font-semibold tracking-tight">
-                Przeciągni i upuść plik żeby go dodać
+                {isDragActive
+                  ? "Upuść plik żeby go dodać"
+                  : "Przeciągni i upuść plik żeby go dodać"}
               </h4>
             </div>
           ) : (
             <ScrollArea className="h-full pr-4">
               {utils.projects.getById.getData(id)?.files.map((file) => (
-                <FileItem key={file.id} name={file.name} type={file.type} />
+                <FileItem
+                  key={file.id}
+                  id={file.id}
+                  projectId={id}
+                  name={file.name}
+                  type={file.type}
+                />
               ))}
             </ScrollArea>
           )}

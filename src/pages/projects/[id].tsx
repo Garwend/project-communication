@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import ProjectStage from "~/components/projects/project-stage/ProjectStage";
-import FilesList from "~/components/projects/FilesList";
+import FilesList from "~/components/files/FilesList";
 import WaitingForList from "~/components/projects/WaitingForList";
 import InviteUser from "~/components/invites/InviteUser";
 import ProjectOptions from "~/components/projects/ProjectOptions";

@@ -43,7 +43,9 @@ export default function ProjectStageHistory({ id }: Props) {
                   </SheetTitle>
                 </div>
 
-                <SheetDescription>{stage.stage}</SheetDescription>
+                <SheetDescription className="whitespace-break-spaces">
+                  {stage.stage}
+                </SheetDescription>
               </div>
             ))}
           </div>

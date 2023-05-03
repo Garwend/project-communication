@@ -7,8 +7,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { toastError } from "~/components/ui/toast";
+
+import { api } from "~/utils/api";
 
 import DeleteFile from "./DeleteFile";
+
+import { downloadFileFromUrl } from "~/lib/utils";
 
 type Props = {
   id: string;
@@ -19,6 +24,14 @@ type Props = {
 
 export default function FileItem({ id, projectId, name, type }: Props) {
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+  const mutation = api.files.getDownloadS3Url.useMutation({
+    onSuccess(data) {
+      downloadFileFromUrl(data, name);
+    },
+    onError() {
+      toastError("Nie udało się pobrać pliku");
+    },
+  });
 
   return (
     <div className="mb-2 flex select-none flex-row items-center justify-between rounded-lg border border-border bg-background p-2">
@@ -39,7 +52,9 @@ export default function FileItem({ id, projectId, name, type }: Props) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => mutation.mutate({ id: id, projectId: projectId })}
+          >
             <Download className="mr-2 h-4 w-4" />
             Pobierz
           </DropdownMenuItem>

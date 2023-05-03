@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  DeleteObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { s3 } from "~/server/s3";
@@ -36,6 +40,31 @@ export const fileRouter = createTRPCRouter({
       });
 
       return await getSignedUrl(s3, putObjectCommand, { expiresIn: 60 });
+    }),
+  getDownloadS3Url: protectedProcedure
+    .input(z.object({ id: z.string(), projectId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.project.findFirstOrThrow({
+        where: {
+          id: input.projectId,
+          OR: [
+            { ownerId: ctx.session.user.id },
+            { participants: { some: { userId: ctx.session.user.id } } },
+          ],
+        },
+      });
+
+      const file = await ctx.prisma.file.findFirstOrThrow({
+        where: { id: input.id },
+      });
+
+      const getObjectCommand = new GetObjectCommand({
+        Bucket: env.AWS_S3_BUCKET_NAME,
+        Key: file.id,
+        ResponseContentDisposition: `attachment; filename="${file.name}"`,
+      });
+
+      return await getSignedUrl(s3, getObjectCommand, { expiresIn: 60 });
     }),
   delete: protectedProcedure
     .input(z.object({ id: z.string(), projectId: z.string() }))

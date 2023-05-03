@@ -17,3 +17,15 @@ export function getUserFirstLetters(str: string) {
 
   return firstLetters.slice(0, 2).toUpperCase();
 }
+
+export function downloadFileFromUrl(url: string, name: string) {
+  const link = document.createElement("a");
+  link.download = name;
+  link.href = url;
+  link.style.display = "none";
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(() => {
+    document.body.removeChild(link);
+  }, 200);
+}

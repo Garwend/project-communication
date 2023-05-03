@@ -36,6 +36,20 @@ export const projectRouter = createTRPCRouter({
             type: true,
             createdAt: true,
           },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        watitngFor: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            createdAt: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
         },
       },
     });

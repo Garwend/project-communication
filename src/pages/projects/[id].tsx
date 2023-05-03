@@ -3,7 +3,7 @@ import { Separator } from "~/components/ui/separator";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import ProjectStage from "~/components/projects/project-stage/ProjectStage";
 import FilesList from "~/components/files/FilesList";
-import WaitingForList from "~/components/projects/WaitingForList";
+import WaitingForList from "~/components/waiting-for/WaitingForList";
 import InviteUser from "~/components/invites/InviteUser";
 import ProjectOptions from "~/components/projects/ProjectOptions";
 import ParticipantsAvatarts from "~/components/projects/ParticipantsAvatars";
@@ -47,7 +47,7 @@ export default function ProjectPage() {
         <section className="flex flex-[0_0_50%] flex-col items-center gap-4">
           <ProjectStage id={id} />
           <FilesList id={id} />
-          <WaitingForList />
+          <WaitingForList id={id} />
         </section>
       </section>
     </ScrollArea>

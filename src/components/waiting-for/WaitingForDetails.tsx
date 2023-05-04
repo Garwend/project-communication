@@ -17,6 +17,7 @@ import {
 } from "~/components/ui/accordion";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Input } from "~/components/ui/input";
+import EditWaitingFor from "./EditWaitingFor";
 import DeleteWaitingFor from "./DeleteWaitingFor";
 
 import { api } from "~/utils/api";
@@ -39,7 +40,10 @@ export default function WaitingForDetails({ id }: Props) {
         <SheetHeader>
           <div className="mt-5 flex flex-row items-center justify-between">
             <SheetTitle>{query.data?.name}</SheetTitle>
-            <DeleteWaitingFor id={id} />
+            <div>
+              <EditWaitingFor id={id} projectId={query.data?.projectId ?? ""} />
+              <DeleteWaitingFor id={id} />
+            </div>
           </div>
 
           <ScrollArea className="pr-4">

@@ -33,6 +33,7 @@ export default function WaitingForList({ id }: Props) {
             {utils.projects.getById.getData(id)?.watitngFor.map((wf) => (
               <WaitingForItem
                 key={wf.id}
+                id={wf.id}
                 name={wf.name}
                 description={wf.description ?? ""}
                 date={wf.createdAt}

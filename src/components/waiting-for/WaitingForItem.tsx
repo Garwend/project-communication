@@ -1,7 +1,7 @@
 import { formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
 import { Clock4 } from "lucide-react";
-import { Paperclip, MessageCircle } from "lucide-react";
+import { Paperclip } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -10,14 +10,16 @@ import {
   CardFooter,
   CardDescription,
 } from "~/components/ui/card";
+import WaitingForDetails from "./WaitingForDetails";
 
 type Props = {
+  id: string;
   name: string;
   description: string;
   date: Date;
 };
 
-export default function WaitingForItem({ name, description, date }: Props) {
+export default function WaitingForItem({ id, name, description, date }: Props) {
   return (
     <Card className="mb-2">
       <CardHeader>
@@ -31,9 +33,7 @@ export default function WaitingForItem({ name, description, date }: Props) {
         </div>
       </CardHeader>
       <CardFooter>
-        <Button>
-          <MessageCircle className="mr-2 h-4 w-4" /> Odpowiedz
-        </Button>
+        <WaitingForDetails id={id} />
         <Button className="ml-2" variant="outline">
           <Paperclip className="mr-2 h-4 w-4" /> Dodaj Załącznik
         </Button>

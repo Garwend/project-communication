@@ -6,13 +6,7 @@ import { formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
 import { Clock4, Paperclip, MessageCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-  CardDescription,
-} from "~/components/ui/card";
+import { Card, CardHeader, CardTitle, CardFooter } from "~/components/ui/card";
 import { toastError } from "~/components/ui/toast";
 import WaitingForDetails from "./WaitingForDetails";
 import Delivered from "./Delivered";
@@ -23,7 +17,6 @@ type Props = {
   id: string;
   projectId: string;
   name: string;
-  description: string;
   date: Date;
   delivered: boolean;
 };
@@ -32,7 +25,6 @@ export default function WaitingForItem({
   id,
   projectId,
   name,
-  description,
   date,
   delivered,
 }: Props) {

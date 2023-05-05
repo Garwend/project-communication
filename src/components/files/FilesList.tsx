@@ -83,7 +83,7 @@ export default function FilesList({ id }: Props) {
           utils.projects.getById.getData(id)?.files === undefined ||
           utils.projects.getById.getData(id)?.files.length === 0 ? (
             <div
-              className={`flex h-full items-center justify-center border-4 border-dashed p-2 ${
+              className={`flex h-full items-center justify-center rounded-lg border-4 border-dashed p-2 ${
                 isDragActive ? "border-primary" : ""
               }`}
             >

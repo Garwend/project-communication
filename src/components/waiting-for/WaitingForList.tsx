@@ -34,6 +34,7 @@ export default function WaitingForList({ id }: Props) {
               <WaitingForItem
                 key={wf.id}
                 id={wf.id}
+                projectId={id}
                 name={wf.name}
                 description={wf.description ?? ""}
                 date={wf.createdAt}

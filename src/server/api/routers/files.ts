@@ -13,7 +13,12 @@ import { env } from "~/env.mjs";
 export const fileRouter = createTRPCRouter({
   getUploadS3Url: protectedProcedure
     .input(
-      z.object({ projectId: z.string(), name: z.string(), type: z.string() })
+      z.object({
+        projectId: z.string(),
+        name: z.string(),
+        type: z.string(),
+        waitingForId: z.string().optional(),
+      })
     )
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.project.findFirstOrThrow({
@@ -31,6 +36,7 @@ export const fileRouter = createTRPCRouter({
           projectId: input.projectId,
           name: input.name,
           type: input.type,
+          waitingForId: input.waitingForId,
         },
       });
 

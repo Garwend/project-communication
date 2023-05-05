@@ -113,15 +113,18 @@ model WatitngFor {
     createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
     createdById String
     createdAt   DateTime @default(now())
+    files       File[]
 }
 
 model File {
-    id        String   @id @default(cuid())
-    project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-    projectId String
-    name      String
-    type      String
-    createdAt DateTime @default(now())
+    id           String      @id @default(cuid())
+    project      Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId    String
+    waitingFor   WatitngFor? @relation(fields: [waitingForId], references: [id])
+    waitingForId String?
+    name         String
+    type         String
+    createdAt    DateTime    @default(now())
 }
 
 model UsersInProjects {

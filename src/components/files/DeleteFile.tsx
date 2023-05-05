@@ -18,6 +18,7 @@ type Props = {
   name: string;
   open: boolean;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+  waitingForId?: string;
 };
 
 export default function DeleteFile({
@@ -26,6 +27,7 @@ export default function DeleteFile({
   name,
   open,
   onOpenChange,
+  waitingForId,
 }: Props) {
   const utils = api.useContext();
 
@@ -33,6 +35,9 @@ export default function DeleteFile({
     onSuccess() {
       onOpenChange(false);
       void utils.projects.getById.refetch(projectId);
+      if (waitingForId !== undefined) {
+        void utils.waitingFor.getById.refetch(waitingForId);
+      }
     },
     onError() {
       toastError("Coś poszło nie tak podczas usuwania pliku");

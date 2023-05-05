@@ -20,9 +20,16 @@ type Props = {
   projectId: string;
   name: string;
   type?: string;
+  waitingForId?: string;
 };
 
-export default function FileItem({ id, projectId, name, type }: Props) {
+export default function FileItem({
+  id,
+  projectId,
+  name,
+  type,
+  waitingForId,
+}: Props) {
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const mutation = api.files.getDownloadS3Url.useMutation({
     onSuccess(data) {
@@ -73,6 +80,7 @@ export default function FileItem({ id, projectId, name, type }: Props) {
         name={name}
         open={openConfirmDelete}
         onOpenChange={setOpenConfirmDelete}
+        waitingForId={waitingForId}
       />
     </div>
   );

@@ -3,7 +3,22 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const waitingForRouter = createTRPCRouter({
   getById: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.watitngFor.findFirstOrThrow({ where: { id: input } });
+    return ctx.prisma.watitngFor.findFirstOrThrow({
+      where: { id: input },
+      include: {
+        files: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            createdAt: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
   }),
   create: protectedProcedure
     .input(

@@ -1,10 +1,10 @@
 import axios from "axios";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
 import { formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
-import { Clock4 } from "lucide-react";
-import { Paperclip } from "lucide-react";
+import { Clock4, Paperclip, MessageCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -33,6 +33,7 @@ export default function WaitingForItem({
   description,
   date,
 }: Props) {
+  const [openDetails, setOpenDetails] = useState(false);
   const utils = api.useContext();
 
   const mutation = api.files.getUploadS3Url.useMutation({
@@ -53,6 +54,7 @@ export default function WaitingForItem({
     },
     onSuccess() {
       void utils.projects.getById.refetch(projectId);
+      void utils.waitingFor.getById.refetch(id);
     },
     onError() {
       toastError("Nie udało się dodać pliku");
@@ -84,31 +86,40 @@ export default function WaitingForItem({
     });
 
   return (
-    <Card
-      {...getRootProps({
-        className: `mb-2 ${
-          isDragActive ? "border-dashed border-primary border-4" : ""
-        }`,
-      })}
-    >
-      <input {...getInputProps()} />
-      <CardHeader className={isDragActive ? "px-[21px] pt-[21px] " : ""}>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription className="truncate whitespace-break-spaces">
-          {description}
-        </CardDescription>
-        <div className="inline-flex flex-row-reverse items-center gap-1 text-xs text-muted-foreground">
-          <Clock4 className="inline-block h-3 w-3" />
-          {formatDistance(date, new Date(), { locale: pl, addSuffix: true })}
-        </div>
-      </CardHeader>
-      <CardFooter className={isDragActive ? "px-[21px] pb-[21px] " : ""}>
-        <WaitingForDetails id={id} />
-        <Button className="ml-2" variant="outline" onClick={open}>
-          <Paperclip className="mr-2 h-4 w-4" />{" "}
-          {isDragActive ? "Upuść plik żeby go dodać" : "Dodaj Załącznik"}
-        </Button>
-      </CardFooter>
-    </Card>
+    <>
+      <Card
+        {...getRootProps({
+          className: `mb-2 ${
+            isDragActive ? "border-dashed border-primary border-4" : ""
+          }`,
+        })}
+      >
+        <input {...getInputProps()} />
+        <CardHeader className={isDragActive ? "px-[21px] pt-[21px] " : ""}>
+          <CardTitle>{name}</CardTitle>
+          <CardDescription className="truncate whitespace-break-spaces">
+            {description}
+          </CardDescription>
+          <div className="inline-flex flex-row-reverse items-center gap-1 text-xs text-muted-foreground">
+            <Clock4 className="inline-block h-3 w-3" />
+            {formatDistance(date, new Date(), { locale: pl, addSuffix: true })}
+          </div>
+        </CardHeader>
+        <CardFooter className={isDragActive ? "px-[21px] pb-[21px] " : ""}>
+          <Button onClick={() => setOpenDetails(true)}>
+            <MessageCircle className="mr-2 h-4 w-4" /> Odpowiedz
+          </Button>
+          <Button className="ml-2" variant="outline" onClick={open}>
+            <Paperclip className="mr-2 h-4 w-4" />{" "}
+            {isDragActive ? "Upuść plik żeby go dodać" : "Dodaj Załącznik"}
+          </Button>
+        </CardFooter>
+      </Card>
+      <WaitingForDetails
+        id={id}
+        openDetails={openDetails}
+        onOpenChange={setOpenDetails}
+      />
+    </>
   );
 }

@@ -103,6 +103,7 @@ export default function FilesList({ id }: Props) {
                   projectId={id}
                   name={file.name}
                   type={file.type}
+                  waitingForId={file.waitingForId ?? undefined}
                 />
               ))}
             </ScrollArea>

@@ -19,11 +19,14 @@ import {
   AccordionTrigger,
 } from "~/components/ui/accordion";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
+import { toastError } from "~/components/ui/toast";
+
 import EditWaitingFor from "./EditWaitingFor";
 import DeleteWaitingFor from "./DeleteWaitingFor";
 import FileItem from "../files/FileItem";
-import { toastError } from "~/components/ui/toast";
+import Delivered from "./Delivered";
 
 import { api } from "~/utils/api";
 
@@ -112,6 +115,11 @@ export default function WaitingForDetails({
               <div className="mt-5 flex flex-row items-center justify-between">
                 <SheetTitle>{query.data?.name}</SheetTitle>
                 <div>
+                  <Delivered
+                    id={id}
+                    projectId={query.data?.projectId ?? ""}
+                    delivered={query.data?.delivered ?? false}
+                  />
                   <Button
                     variant="ghost"
                     className="h-7 w-7 p-0"
@@ -126,7 +134,7 @@ export default function WaitingForDetails({
                   <DeleteWaitingFor id={id} />
                 </div>
               </div>
-
+              <Separator className="my-4" />
               <ScrollArea className="pr-4">
                 <div className="max-h-48">
                   <SheetDescription>{query.data?.description}</SheetDescription>

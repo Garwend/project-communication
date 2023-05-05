@@ -47,10 +47,16 @@ export const projectRouter = createTRPCRouter({
             name: true,
             description: true,
             createdAt: true,
+            delivered: true,
           },
-          orderBy: {
-            createdAt: "desc",
-          },
+          orderBy: [
+            {
+              delivered: "asc",
+            },
+            {
+              createdAt: "desc",
+            },
+          ],
         },
       },
     });

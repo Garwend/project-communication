@@ -13,8 +13,9 @@ import {
   CardFooter,
   CardDescription,
 } from "~/components/ui/card";
-import WaitingForDetails from "./WaitingForDetails";
 import { toastError } from "~/components/ui/toast";
+import WaitingForDetails from "./WaitingForDetails";
+import Delivered from "./Delivered";
 
 import { api } from "~/utils/api";
 
@@ -24,6 +25,7 @@ type Props = {
   name: string;
   description: string;
   date: Date;
+  delivered: boolean;
 };
 
 export default function WaitingForItem({
@@ -32,6 +34,7 @@ export default function WaitingForItem({
   name,
   description,
   date,
+  delivered,
 }: Props) {
   const [openDetails, setOpenDetails] = useState(false);
   const utils = api.useContext();
@@ -91,16 +94,16 @@ export default function WaitingForItem({
         {...getRootProps({
           className: `mb-2 ${
             isDragActive ? "border-dashed border-primary border-4" : ""
-          }`,
+          } ${delivered ? "opacity-50" : ""}`,
         })}
       >
         <input {...getInputProps()} />
         <CardHeader className={isDragActive ? "px-[21px] pt-[21px] " : ""}>
-          <CardTitle>{name}</CardTitle>
-          <CardDescription className="truncate whitespace-break-spaces">
-            {description}
-          </CardDescription>
-          <div className="inline-flex flex-row-reverse items-center gap-1 text-xs text-muted-foreground">
+          <div className="flex flex-row items-center justify-between">
+            <CardTitle>{name}</CardTitle>
+            <Delivered id={id} projectId={projectId} delivered={delivered} />
+          </div>
+          <div className="inline-flex flex-row items-center gap-1 text-xs text-muted-foreground">
             <Clock4 className="inline-block h-3 w-3" />
             {formatDistance(date, new Date(), { locale: pl, addSuffix: true })}
           </div>

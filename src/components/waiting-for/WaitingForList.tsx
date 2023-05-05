@@ -38,6 +38,7 @@ export default function WaitingForList({ id }: Props) {
                 name={wf.name}
                 description={wf.description ?? ""}
                 date={wf.createdAt}
+                delivered={wf.delivered}
               />
             ))}
           </ScrollArea>

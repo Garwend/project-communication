@@ -113,6 +113,7 @@ model WatitngFor {
     createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
     createdById String
     createdAt   DateTime @default(now())
+    delivered   Boolean  @default(false)
     files       File[]
 }
 

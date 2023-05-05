@@ -97,4 +97,30 @@ export const waitingForRouter = createTRPCRouter({
 
       return updatedWaitingFor;
     }),
+  markedAsDelivered: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        projectId: z.string(),
+        delivered: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.project.findFirstOrThrow({
+        where: {
+          id: input.projectId,
+          OR: [
+            { ownerId: ctx.session.user.id },
+            { participants: { some: { userId: ctx.session.user.id } } },
+          ],
+        },
+      });
+
+      await ctx.prisma.watitngFor.update({
+        where: { id: input.id },
+        data: { delivered: input.delivered },
+      });
+
+      return;
+    }),
 });

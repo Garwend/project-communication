@@ -68,7 +68,7 @@ export default function Answer({ name, text, date, userId, id }: Props) {
             </DropdownMenu>
           )}
         </section>
-        <p className="mt-2">{text}</p>
+        <p className="mt-2 whitespace-break-spaces">{text}</p>
       </div>
       <DeleteAnswer
         open={openConfirmDelete}

@@ -56,4 +56,18 @@ export const answerRouter = createTRPCRouter({
 
       return await ctx.prisma.answer.delete({ where: { id: input } });
     }),
+  edit: protectedProcedure
+    .input(z.object({ id: z.string(), text: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.answer.findFirstOrThrow({
+        where: { id: input.id, createdById: ctx.session.user.id },
+      });
+
+      return await ctx.prisma.answer.update({
+        where: { id: input.id },
+        data: {
+          text: input.text,
+        },
+      });
+    }),
 });

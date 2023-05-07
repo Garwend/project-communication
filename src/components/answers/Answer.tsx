@@ -12,6 +12,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import DeleteAnswer from "./DeleteAnswer";
+import EditAnswer from "./EditAnswer";
 import { getUserFirstLetters } from "~/lib/utils";
 
 type Props = {
@@ -24,6 +25,7 @@ type Props = {
 
 export default function Answer({ name, text, date, userId, id }: Props) {
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const { data: session } = useSession();
 
   return (
@@ -51,7 +53,7 @@ export default function Answer({ name, text, date, userId, id }: Props) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setOpenEdit(true)}>
                   <Edit className="mr-2 h-4 w-4" />
                   <span>Edytuj</span>
                 </DropdownMenuItem>
@@ -71,6 +73,12 @@ export default function Answer({ name, text, date, userId, id }: Props) {
       <DeleteAnswer
         open={openConfirmDelete}
         onOpenChange={setOpenConfirmDelete}
+        id={id}
+      />
+      <EditAnswer
+        open={openEdit}
+        onOpenChange={setOpenEdit}
+        text={text}
         id={id}
       />
     </>

@@ -25,8 +25,10 @@ export default function AnswersList({ id }: Props) {
         {query.data?.map((answer) => (
           <Answer
             key={answer.id}
+            id={answer.id}
             text={answer.text}
             date={answer.createdAt}
+            userId={answer.createdBy.id}
             name={answer.createdBy.name ?? answer.createdBy.email ?? ""}
           />
         ))}

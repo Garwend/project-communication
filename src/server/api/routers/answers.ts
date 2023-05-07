@@ -10,6 +10,7 @@ export const answerRouter = createTRPCRouter({
       include: {
         createdBy: {
           select: {
+            id: true,
             name: true,
             email: true,
           },
@@ -45,5 +46,14 @@ export const answerRouter = createTRPCRouter({
       });
 
       return answer;
+    }),
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.answer.findFirstOrThrow({
+        where: { id: input, createdById: ctx.session.user.id },
+      });
+
+      return await ctx.prisma.answer.delete({ where: { id: input } });
     }),
 });

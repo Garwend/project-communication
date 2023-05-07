@@ -11,15 +11,17 @@ export default function AnswersList({ id }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const query = api.answers.getAll.useQuery(id, {
     onSuccess() {
-      if (ref.current) {
-        ref.current.scrollIntoView();
-      }
+      setTimeout(() => {
+        if (ref.current) {
+          ref.current.scrollIntoView();
+        }
+      }, 100);
     },
   });
 
   return (
     <div className="flex flex-1 flex-col justify-end overflow-auto">
-      <ScrollArea>
+      <ScrollArea className="pr-4">
         {query.data?.map((answer) => (
           <Answer
             key={answer.id}

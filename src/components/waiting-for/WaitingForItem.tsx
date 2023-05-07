@@ -19,6 +19,8 @@ type Props = {
   name: string;
   date: Date;
   delivered: boolean;
+  filesCount: number;
+  answersCount: number;
 };
 
 export default function WaitingForItem({
@@ -27,6 +29,8 @@ export default function WaitingForItem({
   name,
   date,
   delivered,
+  filesCount,
+  answersCount,
 }: Props) {
   const [openDetails, setOpenDetails] = useState(false);
   const utils = api.useContext();
@@ -102,11 +106,13 @@ export default function WaitingForItem({
         </CardHeader>
         <CardFooter className={isDragActive ? "px-[21px] pb-[21px] " : ""}>
           <Button onClick={() => setOpenDetails(true)}>
-            <MessageCircle className="mr-2 h-4 w-4" /> Odpowiedz
+            <MessageCircle className="mr-2 h-4 w-4" /> Odpowiedz{" "}
+            {answersCount > 0 ? `(${answersCount})` : ""}
           </Button>
           <Button className="ml-2" variant="outline" onClick={open}>
             <Paperclip className="mr-2 h-4 w-4" />{" "}
-            {isDragActive ? "Upuść plik żeby go dodać" : "Dodaj Załącznik"}
+            {isDragActive ? "Upuść plik żeby go dodać" : "Dodaj Załącznik"}{" "}
+            {filesCount > 0 ? `(${filesCount})` : ""}
           </Button>
         </CardFooter>
       </Card>

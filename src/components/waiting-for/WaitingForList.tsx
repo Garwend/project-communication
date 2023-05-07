@@ -38,6 +38,8 @@ export default function WaitingForList({ id }: Props) {
                 name={wf.name}
                 date={wf.createdAt}
                 delivered={wf.delivered}
+                filesCount={wf._count.files}
+                answersCount={wf._count.answers}
               />
             ))}
           </ScrollArea>

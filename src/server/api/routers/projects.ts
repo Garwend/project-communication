@@ -43,6 +43,12 @@ export const projectRouter = createTRPCRouter({
         },
         watitngFor: {
           select: {
+            _count: {
+              select: {
+                files: true,
+                answers: true,
+              },
+            },
             id: true,
             name: true,
             description: true,

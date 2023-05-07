@@ -28,6 +28,7 @@ export default function CreateAnswer({ projectId, waitingForId }: Props) {
     onSuccess() {
       reset();
       void utils.waitingFor.getById.refetch(waitingForId);
+      void utils.answers.getAll.refetch(waitingForId);
     },
     onError() {
       toastError("Wystąpił błąd");

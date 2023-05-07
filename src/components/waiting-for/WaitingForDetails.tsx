@@ -27,6 +27,7 @@ import DeleteWaitingFor from "./DeleteWaitingFor";
 import FileItem from "../files/FileItem";
 import Delivered from "./Delivered";
 import CreateAnswer from "../answers/CreateAnswer";
+import AnswersList from "../answers/AnswersList";
 
 import { api } from "~/utils/api";
 
@@ -165,7 +166,7 @@ export default function WaitingForDetails({
                 </Accordion>
               )}
             </SheetHeader>
-            <div className="flex-1"></div>
+            <AnswersList id={id} />
             <SheetFooter>
               <CreateAnswer
                 projectId={query.data?.projectId ?? ""}

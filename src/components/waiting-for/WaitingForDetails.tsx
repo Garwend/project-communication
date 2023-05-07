@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
-import { Paperclip, Send } from "lucide-react";
+import { Paperclip } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   Sheet,
@@ -20,13 +20,13 @@ import {
 } from "~/components/ui/accordion";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Separator } from "~/components/ui/separator";
-import { Input } from "~/components/ui/input";
 import { toastError } from "~/components/ui/toast";
 
 import EditWaitingFor from "./EditWaitingFor";
 import DeleteWaitingFor from "./DeleteWaitingFor";
 import FileItem from "../files/FileItem";
 import Delivered from "./Delivered";
+import CreateAnswer from "../answers/CreateAnswer";
 
 import { api } from "~/utils/api";
 
@@ -166,11 +166,11 @@ export default function WaitingForDetails({
               )}
             </SheetHeader>
             <div className="flex-1"></div>
-            <SheetFooter className="gap-2">
-              <Input placeholder="Odpowiedz..." />
-              <Button className="h-10 w-10 flex-shrink-0 p-0">
-                <Send className="h-5 w-5" />
-              </Button>
+            <SheetFooter>
+              <CreateAnswer
+                projectId={query.data?.projectId ?? ""}
+                waitingForId={id}
+              />
             </SheetFooter>
           </>
         )}

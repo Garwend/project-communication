@@ -6,6 +6,7 @@ import { inviteRouter } from "./routers/invites";
 import { projectStageRouter } from "./routers/project-stages";
 import { fileRouter } from "./routers/files";
 import { waitingForRouter } from "./routers/waiting-for";
+import { answerRouter } from "./routers/answers";
 
 /**
  * This is the primary router for your server.
@@ -20,6 +21,7 @@ export const appRouter = createTRPCRouter({
   projectStages: projectStageRouter,
   files: fileRouter,
   waitingFor: waitingForRouter,
+  answers: answerRouter,
 });
 
 // export type definition of API

@@ -32,7 +32,11 @@ export default function ProjectPage() {
           <h1 className="truncate text-2xl font-semibold tracking-tight">
             {query.data?.name}
           </h1>
-          <ProjectOptions id={id} ownerId={query.data.ownerId} />
+          <ProjectOptions
+            id={id}
+            ownerId={query.data.ownerId}
+            status={query.data.status}
+          />
         </div>
         <div className="flex flex-row items-center gap-4">
           <ParticipantsList id={id} />

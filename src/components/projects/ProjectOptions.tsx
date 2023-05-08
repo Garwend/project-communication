@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSession } from "next-auth/react";
 import {
   ChevronsUpDown,
@@ -12,7 +11,6 @@ import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSub,
   DropdownMenuSubTrigger,
@@ -21,18 +19,35 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "~/components/ui/dropdown-menu";
+import { toastError } from "~/components/ui/toast";
 import EditProject from "./EditProject";
 import DeleteProject from "./DeleteProject";
 import LeaveProject from "./LeaveProject";
+import { api, type RouterOutputs } from "~/utils/api";
 
 type Props = {
   id: string;
   ownerId: string;
+  status: Status;
 };
 
-export default function ProjectOptions({ id, ownerId }: Props) {
+type Status = RouterOutputs["projects"]["getById"]["status"];
+
+export default function ProjectOptions({ id, ownerId, status }: Props) {
   const { data: session } = useSession();
-  const [position, setPosition] = useState("NONE");
+  const utils = api.useContext();
+  const mutation = api.projects.changeStatus.useMutation({
+    onSuccess() {
+      void utils.projects.getById.refetch(id);
+    },
+    onError() {
+      toastError("Nie udało sie zmienić statusu");
+    },
+  });
+
+  const handleValueChange = (value: Status) => {
+    mutation.mutate({ status: value, id: id });
+  };
 
   return (
     <DropdownMenu>
@@ -51,8 +66,8 @@ export default function ProjectOptions({ id, ownerId }: Props) {
           <DropdownMenuPortal>
             <DropdownMenuSubContent>
               <DropdownMenuRadioGroup
-                value={position}
-                onValueChange={setPosition}
+                value={status}
+                onValueChange={(value) => handleValueChange(value as Status)}
               >
                 <DropdownMenuRadioItem value="NONE">
                   <Circle className="mr-2 h-4 w-4" />

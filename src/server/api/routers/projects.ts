@@ -148,6 +148,31 @@ export const projectRouter = createTRPCRouter({
 
       return;
     }),
+  changeStatus: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        status: z.enum([
+          "NONE",
+          "IN_PROGRESS",
+          "COMPLETED",
+          "SUSPENDED",
+          "CANCELLED",
+        ]),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.project.findFirstOrThrow({
+        where: { id: input.id, ownerId: ctx.session.user.id },
+      });
+
+      await ctx.prisma.project.update({
+        where: { id: input.id },
+        data: { status: input.status },
+      });
+
+      return;
+    }),
   leaveProject: protectedProcedure
     .input(z.string())
     .mutation(async ({ input, ctx }) => {

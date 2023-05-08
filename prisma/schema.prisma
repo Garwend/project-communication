@@ -78,12 +78,21 @@ model Project {
     ownerId      String
     name         String
     description  String?           @db.Text
+    status       Status            @default(NONE)
     createdAt    DateTime          @default(now())
     participants UsersInProjects[]
     invites      Invite[]
     stages       ProjectStage[]
     files        File[]
     watitngFor   WatitngFor[]
+}
+
+enum Status {
+    NONE
+    IN_PROGRESS
+    COMPLETED
+    SUSPENDED
+    CANCELLED
 }
 
 model Invite {

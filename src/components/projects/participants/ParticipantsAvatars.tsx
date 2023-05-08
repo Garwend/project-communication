@@ -6,7 +6,7 @@ type Props = {
   id: string;
 };
 
-export default function ParticipantsAvatarts({ id }: Props) {
+export default function ParticipantsAvatars({ id }: Props) {
   const utils = api.useContext();
   const owner = utils.projects.getById.getData(id)?.owner;
   const participants = utils.projects.getById.getData(id)?.participants;

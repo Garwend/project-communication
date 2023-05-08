@@ -6,7 +6,7 @@ import FilesList from "~/components/files/FilesList";
 import WaitingForList from "~/components/waiting-for/WaitingForList";
 import InviteUser from "~/components/invites/InviteUser";
 import ProjectOptions from "~/components/projects/ProjectOptions";
-import ParticipantsAvatarts from "~/components/projects/ParticipantsAvatars";
+import ParticipantsList from "~/components/projects/participants/ParticipantsList";
 import { api } from "../../utils/api";
 
 export default function ProjectPage() {
@@ -35,7 +35,7 @@ export default function ProjectPage() {
           <ProjectOptions id={id} ownerId={query.data.ownerId} />
         </div>
         <div className="flex flex-row items-center gap-4">
-          <ParticipantsAvatarts id={id} />
+          <ParticipantsList id={id} />
           <InviteUser id={id} ownerId={query.data.ownerId} />
         </div>
       </header>

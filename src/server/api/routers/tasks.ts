@@ -2,6 +2,21 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const tasksRouter = createTRPCRouter({
+  getAll: protectedProcedure.input(z.string()).query(({ input, ctx }) => {
+    return ctx.prisma.task.findMany({
+      where: {
+        projectId: input,
+      },
+      include: {
+        assignedTo: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }),
   create: protectedProcedure
     .input(
       z.object({

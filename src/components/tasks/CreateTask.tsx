@@ -45,7 +45,7 @@ type FormData = {
   name: string;
   description?: string;
   priority: Priority;
-  assignedId?: string;
+  assignedToId?: string;
   dueDate?: Date;
 };
 
@@ -57,7 +57,7 @@ const schema: ZodType<FormData> = z.object({
     .max(64, { message: "Maksymalna długość to 64 znaki" }),
   description: z.string().optional(),
   priority: z.enum(["NONE", "LOW", "MID", "High"]),
-  assignedId: z.string().optional(),
+  assignedToId: z.string().optional(),
   dueDate: z.date().optional(),
 });
 
@@ -71,6 +71,7 @@ export default function CreateTask({ id }: Props) {
     onSuccess() {
       reset();
       setOpen(false);
+      void utils.tasks.getAll.refetch(id);
     },
     onError() {
       toastError("nie udało się dodać zadania");
@@ -87,7 +88,7 @@ export default function CreateTask({ id }: Props) {
     resolver: zodResolver(schema),
     defaultValues: {
       priority: "NONE",
-      assignedId: "",
+      assignedToId: "",
     },
   });
 
@@ -159,7 +160,7 @@ export default function CreateTask({ id }: Props) {
               <div className="grid items-center gap-1.5">
                 <Label>Przypisane do</Label>
                 <Controller
-                  name="assignedId"
+                  name="assignedToId"
                   control={control}
                   render={({ field }) => (
                     <Select {...field} onValueChange={field.onChange}>

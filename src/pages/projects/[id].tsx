@@ -12,7 +12,10 @@ import { api } from "../../utils/api";
 
 export default function ProjectPage() {
   const id = useRouter().query.id as string;
-  const query = api.projects.getById.useQuery(id, { retry: false });
+  const query = api.projects.getById.useQuery(id, {
+    retry: false,
+    enabled: typeof id === "string",
+  });
 
   if (query.isLoading) {
     return <div>Loading...</div>;

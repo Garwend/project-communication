@@ -136,7 +136,7 @@ enum Priority {
     NONE
     LOW
     MID
-    High
+    HIGH
 }
 
 model WatitngFor {

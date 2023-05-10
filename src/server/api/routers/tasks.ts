@@ -20,12 +20,15 @@ export const tasksRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        name: z.string().trim().min(1).max(64),
-        priority: z.enum(["NONE", "LOW", "MID", "High"]),
+        name: z.string().trim().min(1).max(100),
+        priority: z.enum(["NONE", "LOW", "MID", "HIGH"]),
         description: z.string().optional(),
         dueDate: z.date().optional(),
         projectId: z.string(),
-        assignedToId: z.string().optional(),
+        assignedToId: z
+          .string()
+          .optional()
+          .transform((val) => (val === "" ? undefined : val)),
       })
     )
     .mutation(async ({ input, ctx }) => {

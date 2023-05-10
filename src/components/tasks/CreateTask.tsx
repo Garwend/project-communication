@@ -54,9 +54,9 @@ const schema: ZodType<FormData> = z.object({
     .string()
     .trim()
     .min(1, { message: "To pole nie może być puste" })
-    .max(64, { message: "Maksymalna długość to 64 znaki" }),
+    .max(100, { message: "Maksymalna długość to 100 znaków" }),
   description: z.string().optional(),
-  priority: z.enum(["NONE", "LOW", "MID", "High"]),
+  priority: z.enum(["NONE", "LOW", "MID", "HIGH"]),
   assignedToId: z.string().optional(),
   dueDate: z.date().optional(),
 });
@@ -94,7 +94,10 @@ export default function CreateTask({ id }: Props) {
 
   const onSubmit = handleSubmit((data, e) => {
     e?.preventDefault();
-    mutation.mutate({ ...data, projectId: id });
+    mutation.mutate({
+      ...data,
+      projectId: id,
+    });
   });
 
   useEffect(() => {
@@ -134,7 +137,11 @@ export default function CreateTask({ id }: Props) {
                   name="priority"
                   control={control}
                   render={({ field }) => (
-                    <Select {...field} onValueChange={field.onChange}>
+                    <Select
+                      name={field.name}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <SelectTrigger className="w-[190px]">
                         <SelectValue />
                       </SelectTrigger>
@@ -163,7 +170,11 @@ export default function CreateTask({ id }: Props) {
                   name="assignedToId"
                   control={control}
                   render={({ field }) => (
-                    <Select {...field} onValueChange={field.onChange}>
+                    <Select
+                      name={field.name}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <SelectTrigger className="w-[190px]">
                         <SelectValue />
                       </SelectTrigger>
@@ -240,7 +251,6 @@ export default function CreateTask({ id }: Props) {
                       <PopoverContent className="w-auto p-0">
                         <Calendar
                           mode="single"
-                          {...field}
                           selected={field.value}
                           onSelect={field.onChange}
                           locale={pl}

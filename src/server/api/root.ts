@@ -7,6 +7,7 @@ import { projectStageRouter } from "./routers/project-stages";
 import { fileRouter } from "./routers/files";
 import { waitingForRouter } from "./routers/waiting-for";
 import { answerRouter } from "./routers/answers";
+import { tasksRouter } from "./routers/tasks";
 
 /**
  * This is the primary router for your server.
@@ -22,6 +23,7 @@ export const appRouter = createTRPCRouter({
   files: fileRouter,
   waitingFor: waitingForRouter,
   answers: answerRouter,
+  tasks: tasksRouter,
 });
 
 // export type definition of API

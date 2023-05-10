@@ -7,6 +7,7 @@ import WaitingForList from "~/components/waiting-for/WaitingForList";
 import InviteUser from "~/components/invites/InviteUser";
 import ProjectOptions from "~/components/projects/ProjectOptions";
 import ParticipantsList from "~/components/projects/participants/ParticipantsList";
+import Tasks from "~/components/tasks/Tasks";
 import { api } from "../../utils/api";
 
 export default function ProjectPage() {
@@ -47,6 +48,7 @@ export default function ProjectPage() {
       <section className="flex flex-row">
         <section className="flex-[0_0_50%]">
           <p>{query.data?.description}</p>
+          <Tasks id={id} />
         </section>
         <section className="flex flex-[0_0_50%] flex-col items-center gap-4">
           <ProjectStage id={id} />

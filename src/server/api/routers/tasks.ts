@@ -88,6 +88,59 @@ export const tasksRouter = createTRPCRouter({
 
       return task;
     }),
+  edit: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string().trim().min(1).max(100),
+        priority: z.enum(["NONE", "LOW", "MID", "HIGH"]),
+        description: z.string().optional(),
+        dueDate: z.date().optional(),
+        projectId: z.string(),
+        assignedToId: z
+          .string()
+          .optional()
+          .transform((val) => (val === "" ? undefined : val)),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.project.findFirstOrThrow({
+        where: {
+          id: input.projectId,
+          OR: [
+            { ownerId: ctx.session.user.id },
+            { participants: { some: { userId: ctx.session.user.id } } },
+          ],
+        },
+      });
+
+      const task = await ctx.prisma.task.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+          priority: input.priority,
+          description: input.description,
+          dueDate: input.dueDate,
+          assignedTo:
+            input.assignedToId === undefined
+              ? {
+                  disconnect: true,
+                }
+              : {
+                  connect: {
+                    id: input.assignedToId,
+                  },
+                },
+        },
+        include: {
+          assignedTo: true,
+        },
+      });
+
+      return task;
+    }),
   delete: protectedProcedure
     .input(
       z.object({

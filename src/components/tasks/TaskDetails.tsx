@@ -25,6 +25,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { getUserFirstLetters } from "~/lib/utils";
 import { toastError } from "~/components/ui/toast";
 import DeleteTask from "./DeleteTask";
+import EditTask from "./EditTask";
 import FileItem from "../files/FileItem";
 
 import { api } from "~/utils/api";
@@ -93,6 +94,10 @@ export default function TaskDetails({ projectId }: Props) {
         }
       },
     });
+
+  if (query.error || query.isLoading) {
+    return null;
+  }
 
   return (
     <Sheet
@@ -169,7 +174,7 @@ export default function TaskDetails({ projectId }: Props) {
               <div className="flex flex-row items-center justify-between">
                 {query.data?.assignedTo ? (
                   <div>
-                    <span className="relative mb-1 inline-block rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-xs font-semibold">
+                    <span className="relative mb-1 inline-block rounded bg-muted px-[0.3rem] py-[0.2rem] text-xs font-semibold">
                       Przypisane do:
                     </span>
                     <div className="flex flex-row items-center gap-2">
@@ -196,9 +201,7 @@ export default function TaskDetails({ projectId }: Props) {
                   <Button variant="ghost" className="h-7 w-7 p-0">
                     <CheckSquare className="h-5 w-5" />
                   </Button>
-                  <Button variant="ghost" className="h-7 w-7 p-0">
-                    <Edit className="h-5 w-5" />
-                  </Button>
+                  <EditTask projectId={projectId} task={query.data} />
                   <Button
                     variant="ghost"
                     className="h-7 w-7 p-0"

@@ -27,7 +27,7 @@ export default function TasksGroup({ id, title, create }: Props) {
       <ScrollArea className="pr-4">
         <div className="flex flex-col gap-2">
           {query.data?.map((task) => (
-            <Task key={task.id} task={task} />
+            <Task key={task.id} projectId={id} task={task} />
           ))}
         </div>
       </ScrollArea>

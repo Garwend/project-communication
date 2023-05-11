@@ -17,6 +17,27 @@ export const tasksRouter = createTRPCRouter({
       },
     });
   }),
+  getById: protectedProcedure.input(z.string()).query(({ input, ctx }) => {
+    return ctx.prisma.task.findFirstOrThrow({
+      where: {
+        id: input,
+      },
+      include: {
+        assignedTo: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+        createdBy: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }),
   create: protectedProcedure
     .input(
       z.object({

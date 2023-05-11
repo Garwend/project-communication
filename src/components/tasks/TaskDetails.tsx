@@ -1,11 +1,5 @@
 import { useRouter } from "next/router";
-import {
-  CalendarDays,
-  Paperclip,
-  Edit,
-  Trash2,
-  CheckSquare,
-} from "lucide-react";
+import { CalendarDays, Paperclip, Edit, CheckSquare } from "lucide-react";
 import { format, formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
 import { Button } from "~/components/ui/button";
@@ -26,6 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Separator } from "~/components/ui/separator";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { getUserFirstLetters } from "~/lib/utils";
+import DeleteTask from "./DeleteTask";
 
 import { api } from "~/utils/api";
 
@@ -37,7 +32,11 @@ export default function TaskDetails({ projectId }: Props) {
   const router = useRouter();
   const taskId = router.query.taskId as string;
   const query = api.tasks.getById.useQuery(taskId, {
+    retry: false,
     enabled: typeof taskId === "string",
+    onError() {
+      void router.push(`/projects/${projectId}`);
+    },
   });
 
   return (
@@ -132,12 +131,7 @@ export default function TaskDetails({ projectId }: Props) {
               <Button variant="ghost" className="h-7 w-7 p-0">
                 <Paperclip className="h-5 w-5" />
               </Button>
-              <Button
-                variant="ghost"
-                className="h-7 w-7 p-0 text-destructive hover:text-destructive"
-              >
-                <Trash2 className="h-5 w-5" />
-              </Button>
+              <DeleteTask projectId={projectId} id={query.data?.id ?? ""} />
             </div>
           </div>
           <Accordion type="single" collapsible>

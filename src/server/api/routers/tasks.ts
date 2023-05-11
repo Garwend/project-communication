@@ -77,4 +77,26 @@ export const tasksRouter = createTRPCRouter({
 
       return task;
     }),
+  delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        projectId: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.project.findFirstOrThrow({
+        where: {
+          id: input.projectId,
+          OR: [
+            { ownerId: ctx.session.user.id },
+            { participants: { some: { userId: ctx.session.user.id } } },
+          ],
+        },
+      });
+
+      await ctx.prisma.task.delete({ where: { id: input.id } });
+
+      return;
+    }),
 });

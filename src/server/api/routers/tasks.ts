@@ -35,6 +35,17 @@ export const tasksRouter = createTRPCRouter({
             email: true,
           },
         },
+        files: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            createdAt: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
   }),

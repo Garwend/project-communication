@@ -17,6 +17,7 @@ export const fileRouter = createTRPCRouter({
         projectId: z.string(),
         name: z.string(),
         type: z.string(),
+        taskId: z.string().optional(),
         waitingForId: z.string().optional(),
       })
     )
@@ -37,6 +38,7 @@ export const fileRouter = createTRPCRouter({
           name: input.name,
           type: input.type,
           waitingForId: input.waitingForId,
+          taskId: input.taskId,
         },
       });
 

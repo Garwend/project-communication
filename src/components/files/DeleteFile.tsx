@@ -19,6 +19,7 @@ type Props = {
   open: boolean;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
   waitingForId?: string;
+  taskId?: string;
 };
 
 export default function DeleteFile({
@@ -28,6 +29,7 @@ export default function DeleteFile({
   open,
   onOpenChange,
   waitingForId,
+  taskId,
 }: Props) {
   const utils = api.useContext();
 
@@ -37,6 +39,9 @@ export default function DeleteFile({
       void utils.projects.getById.refetch(projectId);
       if (waitingForId !== undefined) {
         void utils.waitingFor.getById.refetch(waitingForId);
+      }
+      if (taskId !== undefined) {
+        void utils.tasks.getById.refetch(taskId);
       }
     },
     onError() {

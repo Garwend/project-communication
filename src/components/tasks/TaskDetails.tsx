@@ -28,6 +28,7 @@ import { toastError } from "~/components/ui/toast";
 import DeleteTask from "./DeleteTask";
 import EditTask from "./EditTask";
 import CreateComment from "./comments/CreateComment";
+import CommentList from "./comments/CommentList";
 import FileItem from "../files/FileItem";
 
 import { api } from "~/utils/api";
@@ -246,6 +247,7 @@ export default function TaskDetails({ projectId }: Props) {
                     {query.data?.description}
                   </SheetDescription>
                 ) : null}
+                <CommentList id={query.data.id} />
               </ScrollArea>
             </div>
             <SheetFooter>

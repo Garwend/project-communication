@@ -2,6 +2,22 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const commentsRouter = createTRPCRouter({
+  getAll: protectedProcedure.input(z.string()).query(({ input, ctx }) => {
+    return ctx.prisma.comment.findMany({
+      where: {
+        taskId: input,
+      },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }),
   create: protectedProcedure
     .input(
       z.object({

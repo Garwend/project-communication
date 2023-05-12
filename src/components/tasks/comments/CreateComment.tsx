@@ -28,7 +28,7 @@ export default function CreateComment({ taskId, projectId }: Props) {
   const mutation = api.comments.create.useMutation({
     onSuccess() {
       reset();
-      // void utils.tasks.getById.refetch(taskId);
+      void utils.comments.getAll.refetch(taskId);
     },
     onError() {
       toastError("Wystąpił błąd");

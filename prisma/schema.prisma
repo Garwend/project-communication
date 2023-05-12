@@ -62,6 +62,7 @@ model User {
     answers             Answer[]
     assignedTasks       Task[]            @relation("AssignedTasks")
     createdTasks        Task[]            @relation("CreatedTasks")
+    comments            Comment[]
 }
 
 model VerificationToken {
@@ -131,6 +132,7 @@ model Task {
     createdById  String
     createdAt    DateTime  @default(now())
     files        File[]
+    comments     Comment[]
 }
 
 enum Priority {
@@ -138,6 +140,16 @@ enum Priority {
     LOW
     MID
     HIGH
+}
+
+model Comment {
+    id          String   @id @default(cuid())
+    text        String   @db.Text
+    task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+    taskId      String
+    createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+    createdById String
+    createdAt   DateTime @default(now())
 }
 
 model WatitngFor {

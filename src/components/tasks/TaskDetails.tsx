@@ -2,7 +2,7 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
 import { useRouter } from "next/router";
-import { CalendarDays, Paperclip, Edit, CheckSquare } from "lucide-react";
+import { CalendarDays, Paperclip, CheckSquare } from "lucide-react";
 import { format, formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
 import { Button } from "~/components/ui/button";
@@ -12,6 +12,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
+  SheetFooter,
 } from "~/components/ui/sheet";
 import {
   Accordion,
@@ -26,6 +27,7 @@ import { getUserFirstLetters } from "~/lib/utils";
 import { toastError } from "~/components/ui/toast";
 import DeleteTask from "./DeleteTask";
 import EditTask from "./EditTask";
+import CreateComment from "./comments/CreateComment";
 import FileItem from "../files/FileItem";
 
 import { api } from "~/utils/api";
@@ -246,6 +248,9 @@ export default function TaskDetails({ projectId }: Props) {
                 ) : null}
               </ScrollArea>
             </div>
+            <SheetFooter>
+              <CreateComment projectId={projectId} taskId={query.data.id} />
+            </SheetFooter>
           </>
         )}
       </SheetContent>

@@ -8,6 +8,7 @@ import { fileRouter } from "./routers/files";
 import { waitingForRouter } from "./routers/waiting-for";
 import { answerRouter } from "./routers/answers";
 import { tasksRouter } from "./routers/tasks";
+import { commentsRouter } from "./routers/comments";
 
 /**
  * This is the primary router for your server.
@@ -24,6 +25,7 @@ export const appRouter = createTRPCRouter({
   waitingFor: waitingForRouter,
   answers: answerRouter,
   tasks: tasksRouter,
+  comments: commentsRouter,
 });
 
 // export type definition of API

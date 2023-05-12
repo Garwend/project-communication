@@ -12,7 +12,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import DeleteComment from "./DeleteComment";
-// import EditAnswer from "./EditAnswer";
+import EditComment from "./EditComment";
 import { getUserFirstLetters } from "~/lib/utils";
 
 type Props = {
@@ -75,12 +75,12 @@ export default function Comment({ name, text, date, userId, id }: Props) {
         onOpenChange={setOpenConfirmDelete}
         id={id}
       />
-      {/* <EditAnswer
+      <EditComment
         open={openEdit}
         onOpenChange={setOpenEdit}
         text={text}
         id={id}
-      /> */}
+      />
     </>
   );
 }

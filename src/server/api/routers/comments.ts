@@ -16,6 +16,9 @@ export const commentsRouter = createTRPCRouter({
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   }),
   create: protectedProcedure
@@ -55,5 +58,19 @@ export const commentsRouter = createTRPCRouter({
       });
 
       return await ctx.prisma.comment.delete({ where: { id: input } });
+    }),
+  edit: protectedProcedure
+    .input(z.object({ id: z.string(), text: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.comment.findFirstOrThrow({
+        where: { id: input.id, createdById: ctx.session.user.id },
+      });
+
+      return await ctx.prisma.comment.update({
+        where: { id: input.id },
+        data: {
+          text: input.text,
+        },
+      });
     }),
 });

@@ -16,6 +16,9 @@ export const answerRouter = createTRPCRouter({
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   }),
   create: protectedProcedure

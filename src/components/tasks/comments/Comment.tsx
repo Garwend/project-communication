@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-// import DeleteAnswer from "./DeleteAnswer";
+import DeleteComment from "./DeleteComment";
 // import EditAnswer from "./EditAnswer";
 import { getUserFirstLetters } from "~/lib/utils";
 
@@ -70,12 +70,12 @@ export default function Comment({ name, text, date, userId, id }: Props) {
         </section>
         <p className="mt-2 whitespace-break-spaces">{text}</p>
       </div>
-      {/* <DeleteAnswer
+      <DeleteComment
         open={openConfirmDelete}
         onOpenChange={setOpenConfirmDelete}
         id={id}
       />
-      <EditAnswer
+      {/* <EditAnswer
         open={openEdit}
         onOpenChange={setOpenEdit}
         text={text}

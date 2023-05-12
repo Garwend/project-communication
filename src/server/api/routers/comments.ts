@@ -47,4 +47,13 @@ export const commentsRouter = createTRPCRouter({
 
       return task;
     }),
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.comment.findFirstOrThrow({
+        where: { id: input, createdById: ctx.session.user.id },
+      });
+
+      return await ctx.prisma.comment.delete({ where: { id: input } });
+    }),
 });

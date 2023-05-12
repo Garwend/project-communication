@@ -80,7 +80,10 @@ export default function EditTask({ projectId, task }: Props) {
       });
       setOpen(false);
       void utils.tasks.getById.refetch(task.id);
-      void utils.tasks.getAll.refetch(projectId);
+      void utils.tasks.getAll.refetch({
+        projectId: projectId,
+        status: data.status,
+      });
     },
     onError() {
       toastError("nie udało się dodać zadania");

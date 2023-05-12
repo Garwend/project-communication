@@ -4,16 +4,19 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import CreateTask from "./CreateTask";
 import Task from "./Task";
 
-import { api } from "~/utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
+
+type Status = RouterOutputs["tasks"]["getAll"][0]["status"];
 
 type Props = {
   id: string;
   title: string;
+  status: Status;
   create: boolean;
 };
 
-export default function TasksGroup({ id, title, create }: Props) {
-  const query = api.tasks.getAll.useQuery(id);
+export default function TasksGroup({ id, title, create, status }: Props) {
+  const query = api.tasks.getAll.useQuery({ projectId: id, status: status });
 
   return (
     <section className="flex w-72 flex-col rounded-lg border p-2">

@@ -2,21 +2,29 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const tasksRouter = createTRPCRouter({
-  getAll: protectedProcedure.input(z.string()).query(({ input, ctx }) => {
-    return ctx.prisma.task.findMany({
-      where: {
-        projectId: input,
-      },
-      include: {
-        assignedTo: {
-          select: {
-            name: true,
-            email: true,
+  getAll: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.string(),
+        status: z.enum(["WAITING", "IN_PROGRESS", "FINISHED"]),
+      })
+    )
+    .query(({ input, ctx }) => {
+      return ctx.prisma.task.findMany({
+        where: {
+          projectId: input.projectId,
+          status: input.status,
+        },
+        include: {
+          assignedTo: {
+            select: {
+              name: true,
+              email: true,
+            },
           },
         },
-      },
-    });
-  }),
+      });
+    }),
   getById: protectedProcedure.input(z.string()).query(({ input, ctx }) => {
     return ctx.prisma.task.findFirstOrThrow({
       where: {
@@ -159,8 +167,6 @@ export const tasksRouter = createTRPCRouter({
         },
       });
 
-      await ctx.prisma.task.delete({ where: { id: input.id } });
-
-      return;
+      return await ctx.prisma.task.delete({ where: { id: input.id } });
     }),
 });

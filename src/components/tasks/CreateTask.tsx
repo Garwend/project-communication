@@ -68,10 +68,10 @@ export default function CreateTask({ id }: Props) {
   const [open, setOpen] = useState(false);
 
   const mutation = api.tasks.create.useMutation({
-    onSuccess() {
+    onSuccess(data) {
       reset();
       setOpen(false);
-      void utils.tasks.getAll.refetch(id);
+      void utils.tasks.getAll.refetch({ projectId: id, status: data.status });
     },
     onError() {
       toastError("nie udało się dodać zadania");

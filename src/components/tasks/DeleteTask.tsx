@@ -24,8 +24,11 @@ export default function DeleteTask({ id, projectId }: Props) {
   const router = useRouter();
   const utils = api.useContext();
   const mutation = api.tasks.delete.useMutation({
-    onSuccess() {
-      void utils.tasks.getAll.refetch(projectId);
+    onSuccess(data) {
+      void utils.tasks.getAll.refetch({
+        projectId: projectId,
+        status: data.status,
+      });
       void router.push(`/projects/${projectId}`);
     },
     onError() {

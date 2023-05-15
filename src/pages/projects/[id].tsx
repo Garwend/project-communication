@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import ProjectTitle from "~/components/projects/ProjectTitle";
 import ProjectStage from "~/components/projects/project-stage/ProjectStage";
 import FilesList from "~/components/files/FilesList";
 import WaitingForList from "~/components/waiting-for/WaitingForList";
@@ -33,9 +34,7 @@ export default function ProjectPage() {
     <div className="flex h-full w-full flex-col">
       <header className="flex h-10 flex-shrink-0 flex-row items-center justify-between">
         <div className="flex flex-row gap-2">
-          <h1 className="truncate text-2xl font-semibold tracking-tight">
-            {query.data?.name}
-          </h1>
+          <ProjectTitle project={query.data} />
           <ProjectOptions
             id={id}
             ownerId={query.data.ownerId}
@@ -51,7 +50,6 @@ export default function ProjectPage() {
       <ScrollArea>
         <div className="flex flex-row">
           <section className="flex-[0_0_60%]">
-            <p>{query.data?.description}</p>
             <Tasks id={id} project={query.data} />
           </section>
           <section className="flex flex-[0_0_40%] flex-col items-center gap-4">

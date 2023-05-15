@@ -13,7 +13,7 @@ export default function ProjectStage({ id }: Props) {
   const utils = api.useContext();
 
   return (
-    <Card className="w-3/4">
+    <Card className="w-11/12">
       <CardHeader>
         <div className="flex flex-row items-center justify-between">
           <CardTitle>Etap projektu</CardTitle>

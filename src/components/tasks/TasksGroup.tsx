@@ -42,7 +42,7 @@ export default function TasksGroup({
       : projectData.WAITING_ORDER;
 
   return (
-    <section className="flex w-72 flex-col rounded-lg border py-2">
+    <section className="flex w-72 flex-col rounded-lg border py-2 2xl:w-full">
       <header className="flex flex-shrink-0 flex-row items-center justify-between px-2">
         <h4 className="text-xl font-semibold tracking-tight">{title}</h4>
       </header>

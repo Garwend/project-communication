@@ -64,7 +64,7 @@ export default function FilesList({ id }: Props) {
     });
 
   return (
-    <Card className="w-3/4">
+    <Card className="w-11/12">
       <CardHeader>
         <div className="flex flex-row items-center justify-between">
           <CardTitle>Przesłane pliki</CardTitle>

@@ -69,23 +69,38 @@ export default function ProjectOptions({ id, ownerId, status }: Props) {
                 value={status}
                 onValueChange={(value) => handleValueChange(value as Status)}
               >
-                <DropdownMenuRadioItem value="NONE">
+                <DropdownMenuRadioItem
+                  value="NONE"
+                  disabled={session?.user.id !== ownerId}
+                >
                   <Circle className="mr-2 h-4 w-4" />
                   <span>Brak</span>
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="IN_PROGRESS">
+                <DropdownMenuRadioItem
+                  value="IN_PROGRESS"
+                  disabled={session?.user.id !== ownerId}
+                >
                   <ArrowRightCircle className="mr-2 h-4 w-4" />
                   <span>W trakcie</span>
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="COMPLETED">
+                <DropdownMenuRadioItem
+                  value="COMPLETED"
+                  disabled={session?.user.id !== ownerId}
+                >
                   <CheckCircle2 className="mr-2 h-4 w-4" />
                   <span>Ukończony</span>
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="SUSPENDED">
+                <DropdownMenuRadioItem
+                  value="SUSPENDED"
+                  disabled={session?.user.id !== ownerId}
+                >
                   <PauseCircle className="mr-2 h-4 w-4" />
                   <span>Wstrzymany</span>
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="CANCELLED">
+                <DropdownMenuRadioItem
+                  value="CANCELLED"
+                  disabled={session?.user.id !== ownerId}
+                >
                   <Ban className="mr-2 h-4 w-4" />
                   <span>Anulowany</span>
                 </DropdownMenuRadioItem>

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { arrayMove } from "@dnd-kit/sortable";
 
 export const tasksRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -72,7 +73,7 @@ export const tasksRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      await ctx.prisma.project.findFirstOrThrow({
+      const project = await ctx.prisma.project.findFirstOrThrow({
         where: {
           id: input.projectId,
           OR: [
@@ -91,6 +92,13 @@ export const tasksRouter = createTRPCRouter({
           assignedToId: input.assignedToId,
           createdById: ctx.session.user.id,
           projectId: input.projectId,
+        },
+      });
+
+      await ctx.prisma.project.update({
+        where: { id: input.projectId },
+        data: {
+          WAITING_ORDER: [task.id, ...project.WAITING_ORDER],
         },
       });
 
@@ -157,7 +165,7 @@ export const tasksRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      await ctx.prisma.project.findFirstOrThrow({
+      const project = await ctx.prisma.project.findFirstOrThrow({
         where: {
           id: input.projectId,
           OR: [
@@ -167,6 +175,78 @@ export const tasksRouter = createTRPCRouter({
         },
       });
 
-      return await ctx.prisma.task.delete({ where: { id: input.id } });
+      const task = await ctx.prisma.task.delete({ where: { id: input.id } });
+
+      await ctx.prisma.project.update({
+        where: { id: input.projectId },
+        data: {
+          [`${task.status}_ORDER`]: project[`${task.status}_ORDER`].filter(
+            (item) => item !== task.id
+          ),
+        },
+      });
+
+      return task;
+    }),
+  changeStatus: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        status: z.enum(["WAITING", "IN_PROGRESS", "FINISHED"]),
+        index: z.number(),
+        currentIndex: z.number(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const task = await ctx.prisma.task.findFirstOrThrow({
+        where: { id: input.id },
+        include: {
+          project: {
+            select: {
+              id: true,
+              WAITING_ORDER: true,
+              IN_PROGRESS_ORDER: true,
+              FINISHED_ORDER: true,
+            },
+          },
+        },
+      });
+
+      if (task.status !== input.status) {
+        await ctx.prisma.project.update({
+          where: { id: task.project.id },
+          data: {
+            [`${task.status}_ORDER`]: task.project[
+              `${task.status}_ORDER`
+            ].filter((item) => item !== task.id),
+            [`${input.status}_ORDER`]: [
+              ...task.project[`${input.status}_ORDER`].slice(0, input.index),
+              task.id,
+              ...task.project[`${input.status}_ORDER`].slice(
+                input.index,
+                task.project[`${input.status}_ORDER`].length
+              ),
+            ],
+          },
+        });
+
+        return await ctx.prisma.task.update({
+          where: { id: input.id },
+          data: {
+            status: input.status,
+          },
+        });
+      } else {
+        await ctx.prisma.project.update({
+          where: { id: task.project.id },
+          data: {
+            [`${task.status}_ORDER`]: arrayMove(
+              task.project[`${task.status}_ORDER`],
+              input.currentIndex,
+              input.index
+            ),
+          },
+        });
+      }
     }),
 });

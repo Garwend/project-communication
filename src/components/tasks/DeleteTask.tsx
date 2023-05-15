@@ -29,6 +29,7 @@ export default function DeleteTask({ id, projectId }: Props) {
         projectId: projectId,
         status: data.status,
       });
+      void utils.projects.getById.invalidate(projectId);
       void router.push(`/projects/${projectId}`);
     },
     onError() {

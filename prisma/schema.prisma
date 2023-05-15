@@ -76,19 +76,22 @@ model VerificationToken {
 // Projects
 
 model Project {
-    id           String            @id @default(cuid())
-    owner        User              @relation(fields: [ownerId], references: [id])
-    ownerId      String
-    name         String
-    description  String?           @db.Text
-    status       Status            @default(NONE)
-    createdAt    DateTime          @default(now())
-    participants UsersInProjects[]
-    invites      Invite[]
-    stages       ProjectStage[]
-    files        File[]
-    watitngFor   WatitngFor[]
-    tasks        Task[]
+    id                String            @id @default(cuid())
+    owner             User              @relation(fields: [ownerId], references: [id])
+    ownerId           String
+    name              String
+    description       String?           @db.Text
+    status            Status            @default(NONE)
+    createdAt         DateTime          @default(now())
+    participants      UsersInProjects[]
+    invites           Invite[]
+    stages            ProjectStage[]
+    files             File[]
+    watitngFor        WatitngFor[]
+    tasks             Task[]
+    WAITING_ORDER     String[]
+    IN_PROGRESS_ORDER String[]
+    FINISHED_ORDER    String[]
 }
 
 enum Status {

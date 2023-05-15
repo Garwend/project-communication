@@ -30,8 +30,8 @@ export default function ProjectPage() {
   }
 
   return (
-    <ScrollArea className="h-full pr-4">
-      <header className="flex h-10 flex-row items-center justify-between">
+    <div className="flex h-full w-full flex-col">
+      <header className="flex h-10 flex-shrink-0 flex-row items-center justify-between">
         <div className="flex flex-row gap-2">
           <h1 className="truncate text-2xl font-semibold tracking-tight">
             {query.data?.name}
@@ -48,17 +48,19 @@ export default function ProjectPage() {
         </div>
       </header>
       <Separator className="mb-4 mt-2" />
-      <section className="flex flex-row">
-        <section className="flex-[0_0_50%]">
-          <p>{query.data?.description}</p>
-          <Tasks id={id} />
-        </section>
-        <section className="flex flex-[0_0_50%] flex-col items-center gap-4">
-          <ProjectStage id={id} />
-          <FilesList id={id} />
-          <WaitingForList id={id} />
-        </section>
-      </section>
-    </ScrollArea>
+      <ScrollArea>
+        <div className="flex flex-row">
+          <section className="flex-[0_0_60%]">
+            <p>{query.data?.description}</p>
+            <Tasks id={id} project={query.data} />
+          </section>
+          <section className="flex flex-[0_0_40%] flex-col items-center gap-4">
+            <ProjectStage id={id} />
+            <FilesList id={id} />
+            <WaitingForList id={id} />
+          </section>
+        </div>
+      </ScrollArea>
+    </div>
   );
 }

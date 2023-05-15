@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { useSortable } from "@dnd-kit/sortable";
 import { CalendarDays } from "lucide-react";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { getUserFirstLetters } from "~/lib/utils";
 import { type RouterOutputs } from "~/utils/api";
+import { CSS } from "@dnd-kit/utilities";
 
 type Task = RouterOutputs["tasks"]["getAll"][0];
 
@@ -23,7 +25,7 @@ export default function Task({ projectId, task }: Props) {
       legacyBehavior
     >
       <a>
-        <div className="cursor-pointer break-words rounded-lg border p-2 hover:border-primary">
+        <div className="cursor-pointer break-words rounded-lg border bg-background p-2 hover:border-primary">
           <p style={{ overflowWrap: "anywhere" }}>
             {priority === "NONE" ? null : (
               <span
@@ -64,5 +66,38 @@ export default function Task({ projectId, task }: Props) {
         </div>
       </a>
     </Link>
+  );
+}
+
+export function SortableTask({ task, projectId }: Props) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id, data: task });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : 1,
+  };
+
+  if (!task) {
+    return null;
+  }
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={style}
+      className="mb-3"
+    >
+      <Task task={task} projectId={projectId} />
+    </div>
   );
 }

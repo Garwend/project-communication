@@ -72,6 +72,7 @@ export default function CreateTask({ id }: Props) {
       reset();
       setOpen(false);
       void utils.tasks.getAll.refetch({ projectId: id, status: data.status });
+      void utils.projects.getById.invalidate(id);
     },
     onError() {
       toastError("nie udało się dodać zadania");

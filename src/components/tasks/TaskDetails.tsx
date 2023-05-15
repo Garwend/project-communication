@@ -201,9 +201,6 @@ export default function TaskDetails({ projectId }: Props) {
                 ) : null}
                 <div className="h-0 w-0"></div>
                 <div>
-                  <Button variant="ghost" className="h-7 w-7 p-0">
-                    <CheckSquare className="h-5 w-5" />
-                  </Button>
                   <EditTask projectId={projectId} task={query.data} />
                   <Button
                     variant="ghost"

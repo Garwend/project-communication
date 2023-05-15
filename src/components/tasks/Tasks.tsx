@@ -18,6 +18,7 @@ import TasksGroup from "./TasksGroup";
 import Task from "./Task";
 import { toastError } from "../ui/toast";
 import { api, type RouterOutputs } from "~/utils/api";
+import CreateTask from "./CreateTask";
 
 type Props = {
   id: string;
@@ -223,17 +224,17 @@ export default function Tasks({ id, project }: Props) {
 
   return (
     <>
+      <CreateTask id={id} />
       <DndContext
         sensors={sensors}
         onDragEnd={handleDragEnd}
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
       >
-        <div className="flex h-[calc(100vh-10rem)] flex-row gap-2">
+        <div className="flex h-[calc(100vh-12rem)] flex-row gap-2">
           <TasksGroup
             id={id}
             title="Oczekiwanie na realizacje"
-            create={true}
             status="WAITING"
             projectData={projectData}
             disabled={mutation.isLoading}
@@ -241,7 +242,6 @@ export default function Tasks({ id, project }: Props) {
           <TasksGroup
             id={id}
             title="W realizacji"
-            create={false}
             status="IN_PROGRESS"
             projectData={projectData}
             disabled={mutation.isLoading}
@@ -249,7 +249,6 @@ export default function Tasks({ id, project }: Props) {
           <TasksGroup
             id={id}
             title="Zrealizowane"
-            create={false}
             status="FINISHED"
             projectData={projectData}
             disabled={mutation.isLoading}

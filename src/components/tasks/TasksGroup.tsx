@@ -18,7 +18,6 @@ type Props = {
   id: string;
   title: string;
   status: Status;
-  create: boolean;
   projectData: Project;
   disabled: boolean;
 };
@@ -26,7 +25,6 @@ type Props = {
 export default function TasksGroup({
   id,
   title,
-  create,
   status,
   projectData,
   disabled,
@@ -48,7 +46,6 @@ export default function TasksGroup({
     <section className="flex w-72 flex-col rounded-lg border py-2">
       <header className="flex flex-shrink-0 flex-row items-center justify-between px-2">
         <h4 className="text-xl font-semibold tracking-tight">{title}</h4>
-        {create ? <CreateTask id={id} /> : null}
       </header>
       <div className="px-2">
         <Separator className="my-2 flex-shrink-0" />

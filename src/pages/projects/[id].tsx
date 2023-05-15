@@ -46,7 +46,7 @@ export default function ProjectPage() {
           <InviteUser id={id} ownerId={query.data.ownerId} />
         </div>
       </header>
-      <Separator className="mb-4 mt-2" />
+      <Separator className="mb-2 mt-2" />
       <ScrollArea>
         <div className="flex flex-row">
           <section className="flex-[0_0_60%]">

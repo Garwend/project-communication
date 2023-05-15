@@ -108,12 +108,8 @@ export default function CreateTask({ id }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          className="h-7 w-7 p-0"
-          disabled={mutation.isLoading}
-        >
-          <Plus className="h-5 w-5" />
+        <Button disabled={mutation.isLoading} className="mb-2">
+          <span>Dodaj zadanie</span> <Plus className="ml-2 h-6 w-6" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-full lg:max-w-[650px]">

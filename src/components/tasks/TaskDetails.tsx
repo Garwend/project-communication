@@ -2,7 +2,7 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
 import { useRouter } from "next/router";
-import { CalendarDays, Paperclip, CheckSquare } from "lucide-react";
+import { CalendarDays, Paperclip } from "lucide-react";
 import { format, formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
 import { Button } from "~/components/ui/button";
@@ -129,7 +129,7 @@ export default function TaskDetails({ projectId }: Props) {
             <SheetHeader>
               <div className="flex flex-row items-center justify-between pr-6">
                 <div className="flex flex-row items-center gap-2">
-                  <Avatar className="h-6 w-6">
+                  <Avatar className="h-7 w-7">
                     <AvatarImage src="" />
                     <AvatarFallback className="text-xs">
                       {getUserFirstLetters(
@@ -181,7 +181,7 @@ export default function TaskDetails({ projectId }: Props) {
                       Przypisane do:
                     </span>
                     <div className="flex flex-row items-center gap-2">
-                      <Avatar className="h-8 w-8">
+                      <Avatar className="h-7 w-7">
                         <AvatarImage src="" />
                         <AvatarFallback className="text-xs">
                           {getUserFirstLetters(

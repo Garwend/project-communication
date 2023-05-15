@@ -6,7 +6,6 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import CreateTask from "./CreateTask";
 import { SortableTask } from "./Task";
 
 import { api, type RouterOutputs } from "~/utils/api";

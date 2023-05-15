@@ -77,7 +77,7 @@ export default function InviteUser({ id, ownerId }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
+        <Button size="sm" variant="secondary">
           <UserPlus className="mr-2 h-4 w-4" /> Zaproś
         </Button>
       </DialogTrigger>

@@ -38,6 +38,7 @@ import { api, type RouterOutputs } from "~/utils/api";
 type Props = {
   projectId: string;
   task: Task;
+  fetchProject: boolean;
 };
 
 type Task = RouterOutputs["tasks"]["getById"];
@@ -63,8 +64,12 @@ const schema: ZodType<FormData> = z.object({
   dueDate: z.date().optional(),
 });
 
-export default function EditTask({ projectId, task }: Props) {
+export default function EditTask({ projectId, task, fetchProject }: Props) {
   const utils = api.useContext();
+  api.projects.getById.useQuery(projectId, {
+    retry: false,
+    enabled: fetchProject,
+  });
   const participants = utils.projects.getById.getData(projectId)?.participants;
   const owner = utils.projects.getById.getData(projectId)?.owner;
   const [open, setOpen] = useState(false);

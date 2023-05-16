@@ -30,6 +30,12 @@ export const tasksRouter = createTRPCRouter({
     return ctx.prisma.task.findFirstOrThrow({
       where: {
         id: input,
+        project: {
+          OR: [
+            { ownerId: ctx.session.user.id },
+            { participants: { some: { userId: ctx.session.user.id } } },
+          ],
+        },
       },
       include: {
         assignedTo: {

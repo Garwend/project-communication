@@ -2,35 +2,20 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
 import { useRouter } from "next/router";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetFooter,
-} from "~/components/ui/sheet";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import CommentList from "~/components/tasks/comments/CommentList";
+import CreateComment from "~/components/tasks/comments/CreateComment";
+import TaskDetailsHeader from "~/components/tasks/TaskDetailsHeader";
+import { Skeleton } from "~/components/ui/skeleton";
 import { toastError } from "~/components/ui/toast";
-import TaskDetailsHeader from "./TaskDetailsHeader";
-import CreateComment from "./comments/CreateComment";
-import CommentList from "./comments/CommentList";
-
 import { api } from "~/utils/api";
 
-type Props = {
-  projectId: string;
-};
-
-export default function TaskDetails({ projectId }: Props) {
-  const router = useRouter();
+export default function TaskPage() {
+  const id = useRouter().query.id as string;
   const utils = api.useContext();
-  const taskId = router.query.taskId as string;
-  const query = api.tasks.getById.useQuery(taskId, {
+  const query = api.tasks.getById.useQuery(id, {
     retry: false,
-    enabled: typeof taskId === "string",
-    onError() {
-      void router.push(`/projects/${projectId}`);
-    },
+    enabled: typeof id === "string",
   });
 
   const mutation = api.files.getUploadS3Url.useMutation({
@@ -50,8 +35,7 @@ export default function TaskDetails({ projectId }: Props) {
       });
     },
     onSuccess() {
-      void utils.projects.getById.refetch(projectId);
-      void utils.tasks.getById.refetch(taskId);
+      void utils.tasks.getById.refetch(id);
     },
     onError() {
       toastError("Nie udało się dodać pliku");
@@ -68,7 +52,7 @@ export default function TaskDetails({ projectId }: Props) {
       onDropAccepted(files) {
         mutation.mutate({
           taskId: query.data?.id,
-          projectId: projectId,
+          projectId: query.data?.projectId ?? "",
           name: files[0]?.name ?? "",
           type: files[0]?.type ?? "",
         });
@@ -82,57 +66,65 @@ export default function TaskDetails({ projectId }: Props) {
       },
     });
 
-  if (query.error || query.isLoading) {
-    return null;
+  if (query.isLoading) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <Skeleton className="h-[95%] w-[95%] max-w-3xl rounded-md" />
+      </div>
+    );
+  }
+
+  if (query.error) {
+    return (
+      <div>
+        <h1>Nie znaleziono zaadania</h1>
+      </div>
+    );
   }
 
   return (
-    <Sheet
-      open={!!router.query.taskId}
-      onOpenChange={(value) => {
-        if (!value) {
-          void router.push(`/projects/${projectId}`);
-        }
-      }}
-    >
-      <SheetContent
-        position="right"
+    <div className="flex h-full w-full items-center justify-center">
+      <div
         {...getRootProps({
-          className: "flex flex-col",
+          className:
+            "flex h-[95%] w-[95%] max-w-3xl flex-col rounded-md border p-4",
         })}
       >
         <input {...getInputProps()} />
         {isDragActive ? (
-          <div className="mt-5 flex h-full w-full items-center justify-center rounded-lg border-4 border-dashed border-primary">
+          <div className="flex h-full w-full items-center justify-center rounded-lg border-4 border-dashed border-primary">
             <h4 className="truncate text-2xl font-semibold tracking-tight">
               Upuść plik żeby go dodać
             </h4>
           </div>
         ) : (
           <>
-            <SheetHeader>
+            <header>
               <TaskDetailsHeader
                 task={query.data}
                 openFile={open}
-                dialog={true}
+                dialog={false}
               />
-            </SheetHeader>
-            <div className="mt-4 flex flex-1 flex-col overflow-auto">
+            </header>
+            <section className="mt-4 flex flex-1 flex-col overflow-auto">
               <ScrollArea className="pr-4">
                 {query.data?.description?.length !== 0 ? (
-                  <SheetDescription className="whitespace-break-spaces">
+                  <p className="whitespace-break-spaces text-sm text-muted-foreground">
                     {query.data?.description}
-                  </SheetDescription>
+                  </p>
                 ) : null}
                 <CommentList id={query.data.id} />
               </ScrollArea>
-            </div>
-            <SheetFooter>
-              <CreateComment projectId={projectId} taskId={query.data.id} />
-            </SheetFooter>
+            </section>
+            <footer className="mt-4">
+              <CreateComment
+                projectId={query.data.projectId}
+                taskId={query.data.id}
+              />
+            </footer>
           </>
         )}
-      </SheetContent>
-    </Sheet>
+      </div>
+    </div>
   );
 }

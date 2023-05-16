@@ -23,6 +23,7 @@ export default function Task({ projectId, task }: Props) {
       href={`/projects/[id]?id=${projectId}&taskId=${id}`}
       as={`/tasks/${id}`}
       legacyBehavior
+      shallow={true}
     >
       <a>
         <div className="cursor-pointer break-words rounded-lg border bg-background p-2 hover:border-primary">

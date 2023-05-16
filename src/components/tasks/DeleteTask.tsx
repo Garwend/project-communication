@@ -18,9 +18,14 @@ import { api } from "~/utils/api";
 type Props = {
   id: string;
   projectId: string;
+  redirectToMainPage: boolean;
 };
 
-export default function DeleteTask({ id, projectId }: Props) {
+export default function DeleteTask({
+  id,
+  projectId,
+  redirectToMainPage,
+}: Props) {
   const router = useRouter();
   const utils = api.useContext();
   const mutation = api.tasks.delete.useMutation({
@@ -30,7 +35,11 @@ export default function DeleteTask({ id, projectId }: Props) {
         status: data.status,
       });
       void utils.projects.getById.invalidate(projectId);
-      void router.push(`/projects/${projectId}`);
+      if (redirectToMainPage) {
+        void router.push("/");
+      } else {
+        void router.push(`/projects/${projectId}`);
+      }
     },
     onError() {
       toastError("Nie udało się usunąć");

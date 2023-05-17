@@ -26,6 +26,38 @@ export const tasksRouter = createTRPCRouter({
         },
       });
     }),
+  getMyTasks: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.task.findMany({
+      where: {
+        OR: [
+          { createdBy: { id: ctx.session.user.id } },
+          { assignedTo: { id: ctx.session.user.id } },
+        ],
+      },
+      include: {
+        assignedTo: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+        project: {
+          select: {
+            name: true,
+          },
+        },
+        createdBy: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  }),
   getById: protectedProcedure.input(z.string()).query(({ input, ctx }) => {
     return ctx.prisma.task.findFirstOrThrow({
       where: {

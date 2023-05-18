@@ -90,7 +90,7 @@ export const columns = [
   }),
   columnHelper.accessor("dueDate", {
     header: (info) => (
-      <div className="text-right">
+      <div className="min-w-[145px] text-right">
         <Button
           variant="ghost"
           size="sm"

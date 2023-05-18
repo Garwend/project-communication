@@ -41,21 +41,32 @@ export const columns = [
       </p>
     ),
   }),
-  columnHelper.accessor("project.name", {
+  columnHelper.accessor("projectId", {
     header: "Projekt",
     cell: (info) => (
       <div className="w-[180px]">
-        <p style={{ overflowWrap: "anywhere" }}>{info.getValue()}</p>
+        <p style={{ overflowWrap: "anywhere" }}>
+          {info.row.original.project.name}
+        </p>
       </div>
     ),
+    filterFn: (row, id, value: string[]) => {
+      return value.includes(row.getValue(id));
+    },
   }),
   columnHelper.accessor("status", {
     header: "Status",
     cell: (info) => <TaskStatusCell status={info.getValue()} />,
+    filterFn: (row, id, value: string[]) => {
+      return value.includes(row.getValue(id));
+    },
   }),
   columnHelper.accessor("priority", {
     header: "Priorytet",
     cell: (info) => <TaskPriorityCell priority={info.getValue()} />,
+    filterFn: (row, id, value: string[]) => {
+      return value.includes(row.getValue(id));
+    },
   }),
   columnHelper.accessor("assignedTo", {
     header: "Przypisane do",

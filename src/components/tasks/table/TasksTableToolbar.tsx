@@ -1,21 +1,62 @@
-import { Button } from "~/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { type Table } from "@tanstack/react-table";
+import TaskTableFacetedFilter from "./TaskTableFacetedFilter";
+import { api } from "~/utils/api";
 
-export default function TasksTableToolbar() {
+interface TasksTableToolbarProps<TData> {
+  table: Table<TData>;
+}
+
+const statuses = [
+  { label: "Oczekiwanie", value: "WAITING" },
+  { label: "Realizacja", value: "IN_PROGRESS" },
+  { label: "Zrealizowane", value: "FINISHED" },
+];
+
+const priorities = [
+  { label: "Brak", value: "NONE" },
+  { label: "Niski", value: "LOW" },
+  { label: "Średni", value: "MID" },
+  { label: "Wysoki", value: "HIGH" },
+];
+
+export default function TasksTableToolbar<TData>({
+  table,
+}: TasksTableToolbarProps<TData>) {
+  const utils = api.useContext();
+  const projects = utils.projects.getAll.getData();
+  api.projects.getAll.useQuery(undefined, { enabled: projects === undefined });
+
   return (
     <section className="mb-2 flex flex-row gap-2">
-      <Button variant="outline" size="sm" className="h-8 border-dashed">
-        <PlusCircle className="mr-2 h-4 w-4" />
-        <span>Projekt</span>
-      </Button>
-      <Button variant="outline" size="sm" className="h-8 border-dashed">
-        <PlusCircle className="mr-2 h-4 w-4" />
-        <span>Status</span>
-      </Button>
-      <Button variant="outline" size="sm" className="h-8 border-dashed">
-        <PlusCircle className="mr-2 h-4 w-4" />
-        <span>Priorytet</span>
-      </Button>
+      {table.getColumn("projectId") && (
+        <TaskTableFacetedFilter
+          column={table.getColumn("projectId")}
+          title="Projekt"
+          options={
+            projects
+              ? projects.map((project) => ({
+                  label: project.name,
+                  value: project.id,
+                }))
+              : []
+          }
+          search={true}
+        />
+      )}
+      {table.getColumn("status") && (
+        <TaskTableFacetedFilter
+          column={table.getColumn("status")}
+          title="Status"
+          options={statuses}
+        />
+      )}
+      {table.getColumn("priority") && (
+        <TaskTableFacetedFilter
+          column={table.getColumn("priority")}
+          title="Priorytet"
+          options={priorities}
+        />
+      )}
     </section>
   );
 }

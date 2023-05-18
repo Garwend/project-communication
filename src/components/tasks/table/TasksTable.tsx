@@ -1,53 +1,99 @@
+import { useState } from "react";
+import {
+  type ColumnDef,
+  type ColumnFiltersState,
+  type SortingState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
+  TableCell,
 } from "~/components/ui/table";
-import TaskRow from "./TaskRow";
 
-import { api } from "~/utils/api";
+interface TableProps<TData, TValue> {
+  columns: ColumnDef<TData, any>[];
+  data: TData[];
+}
 
-export default function TasksTable() {
-  const query = api.tasks.getMyTasks.useQuery();
+export default function TasksTable<TData, TValue>({
+  data,
+  columns,
+}: TableProps<TData, any>) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  if (query.error || query.isLoading) {
-    return null;
-  }
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
+  });
+
+  // const router = useRouter();
+
+  // const openTask = async () => {
+  //   await router.push(`/?taskId=${task.id}`, `/tasks/${task.id}`, {
+  //     shallow: true,
+  //   });
+  // };
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-md border">
+    <div className="relative w-full flex-1 overflow-hidden rounded-md border">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead className="sticky top-0 z-50 bg-background">
-              Nazwa
-            </TableHead>
-            <TableHead className="sticky top-0 z-50 w-[250px] bg-background">
-              Projekt
-            </TableHead>
-            <TableHead className="sticky top-0 z-50 w-[125px] bg-background">
-              Status
-            </TableHead>
-            <TableHead className="sticky top-0 z-50 w-[125px] bg-background">
-              Priorytet
-            </TableHead>
-            <TableHead className="sticky top-0 z-50 w-[125px] bg-background">
-              Przypisane do
-            </TableHead>
-            <TableHead className="sticky top-0 z-50 w-[125px] bg-background">
-              Dodane przez
-            </TableHead>
-            <TableHead className="sticky top-0 z-50 w-[180px] bg-background text-right">
-              Termin
-            </TableHead>
-          </TableRow>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead
+                    key={header.id}
+                    className="sticky top-0 z-50 bg-background"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
         </TableHeader>
         <TableBody>
-          {query.data.map((task) => (
-            <TaskRow key={task.id} task={task} />
-          ))}
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </div>

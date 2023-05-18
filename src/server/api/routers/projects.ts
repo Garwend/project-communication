@@ -79,6 +79,9 @@ export const projectRouter = createTRPCRouter({
         id: true,
         name: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   }),
   createProject: protectedProcedure

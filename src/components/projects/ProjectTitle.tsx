@@ -47,7 +47,7 @@ export default function ProjectTitle({ project }: Props) {
           ) : (
             <PauseCircle className="h-5 w-5 text-primary" />
           )}
-          <h4 className="text-sm font-semibold">{project.name}</h4>
+          <h4 className="truncate text-sm font-semibold">{project.name}</h4>
         </div>
         <p>{project.description}</p>
         <div className="flex flex-row items-center gap-1">

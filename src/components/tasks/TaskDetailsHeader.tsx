@@ -82,7 +82,7 @@ export default function TaskDetailsHeader({
         ) : null}
       </div>
       {dialog ? (
-        <SheetTitle className="mt-5">
+        <SheetTitle className="mt-5 break-words">
           {task.priority === "NONE" ? null : (
             <span
               className={`mr-2 inline-block h-3 w-3 rounded-full ${
@@ -97,7 +97,7 @@ export default function TaskDetailsHeader({
           {task.name}
         </SheetTitle>
       ) : (
-        <h2 className="mt-5 text-lg font-semibold text-foreground">
+        <h2 className="mt-5 break-words text-lg font-semibold text-foreground">
           {task.priority === "NONE" ? null : (
             <span
               className={`mr-2 inline-block h-3 w-3 rounded-full ${

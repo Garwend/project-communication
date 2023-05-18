@@ -18,10 +18,18 @@ import CommentList from "./comments/CommentList";
 import { api } from "~/utils/api";
 
 type Props = {
-  projectId: string;
+  redirectUrl: string;
+  redirectToMainPage?: boolean;
+  refetchMyTasks?: boolean;
+  fetchProject?: boolean;
 };
 
-export default function TaskDetails({ projectId }: Props) {
+export default function TaskDetails({
+  redirectUrl,
+  redirectToMainPage,
+  refetchMyTasks,
+  fetchProject,
+}: Props) {
   const router = useRouter();
   const utils = api.useContext();
   const taskId = router.query.taskId as string;
@@ -29,7 +37,7 @@ export default function TaskDetails({ projectId }: Props) {
     retry: false,
     enabled: typeof taskId === "string",
     onError() {
-      void router.push(`/projects/${projectId}`);
+      void router.push(redirectUrl);
     },
   });
 
@@ -50,7 +58,7 @@ export default function TaskDetails({ projectId }: Props) {
       });
     },
     onSuccess() {
-      void utils.projects.getById.refetch(projectId);
+      void utils.projects.getById.refetch(query.data?.projectId ?? "");
       void utils.tasks.getById.refetch(taskId);
     },
     onError() {
@@ -68,7 +76,7 @@ export default function TaskDetails({ projectId }: Props) {
       onDropAccepted(files) {
         mutation.mutate({
           taskId: query.data?.id,
-          projectId: projectId,
+          projectId: query.data?.projectId ?? "",
           name: files[0]?.name ?? "",
           type: files[0]?.type ?? "",
         });
@@ -91,7 +99,7 @@ export default function TaskDetails({ projectId }: Props) {
       open={!!router.query.taskId}
       onOpenChange={(value) => {
         if (!value) {
-          void router.push(`/projects/${projectId}`);
+          void router.push(redirectUrl);
         }
       }}
     >
@@ -115,6 +123,9 @@ export default function TaskDetails({ projectId }: Props) {
                 task={query.data}
                 openFile={open}
                 dialog={true}
+                redirectToMainPage={redirectToMainPage}
+                refetchMyTasks={refetchMyTasks}
+                fetchProject={fetchProject}
               />
             </SheetHeader>
             <div className="mt-4 flex flex-1 flex-col overflow-auto">
@@ -128,7 +139,10 @@ export default function TaskDetails({ projectId }: Props) {
               </ScrollArea>
             </div>
             <SheetFooter>
-              <CreateComment projectId={projectId} taskId={query.data.id} />
+              <CreateComment
+                projectId={query.data.projectId}
+                taskId={query.data.id}
+              />
             </SheetFooter>
           </>
         )}

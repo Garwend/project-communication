@@ -258,7 +258,7 @@ export default function Tasks({ id, project }: Props) {
           {activeTask ? <Task task={activeTask} projectId={id} /> : null}
         </DragOverlay>
       </DndContext>
-      <TaskDetails projectId={id} />
+      <TaskDetails redirectUrl={`/projects/${id}`} />
     </>
   );
 }

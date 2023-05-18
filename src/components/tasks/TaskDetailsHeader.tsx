@@ -24,9 +24,19 @@ type Props = {
   task: Task;
   openFile: () => void;
   dialog: boolean;
+  redirectToMainPage?: boolean;
+  refetchMyTasks?: boolean;
+  fetchProject?: boolean;
 };
 
-export default function TaskDetailsHeader({ task, openFile, dialog }: Props) {
+export default function TaskDetailsHeader({
+  task,
+  openFile,
+  dialog,
+  redirectToMainPage,
+  refetchMyTasks,
+  fetchProject,
+}: Props) {
   return (
     <>
       <div
@@ -130,7 +140,8 @@ export default function TaskDetailsHeader({ task, openFile, dialog }: Props) {
           <EditTask
             projectId={task.projectId}
             task={task}
-            fetchProject={!dialog}
+            fetchProject={fetchProject ?? false}
+            refetchMyTasks={refetchMyTasks}
           />
           <Button variant="ghost" className="h-7 w-7 p-0" onClick={openFile}>
             <Paperclip className="h-5 w-5" />
@@ -138,7 +149,8 @@ export default function TaskDetailsHeader({ task, openFile, dialog }: Props) {
           <DeleteTask
             projectId={task.projectId}
             id={task.id}
-            redirectToMainPage={!dialog}
+            redirectToMainPage={redirectToMainPage}
+            refetchMyTasks={refetchMyTasks}
           />
         </div>
       </div>

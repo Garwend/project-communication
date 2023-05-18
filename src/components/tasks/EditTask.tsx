@@ -39,6 +39,7 @@ type Props = {
   projectId: string;
   task: Task;
   fetchProject: boolean;
+  refetchMyTasks?: boolean;
 };
 
 type Task = RouterOutputs["tasks"]["getById"];
@@ -64,7 +65,12 @@ const schema: ZodType<FormData> = z.object({
   dueDate: z.date().optional(),
 });
 
-export default function EditTask({ projectId, task, fetchProject }: Props) {
+export default function EditTask({
+  projectId,
+  task,
+  fetchProject,
+  refetchMyTasks,
+}: Props) {
   const utils = api.useContext();
   api.projects.getById.useQuery(projectId, {
     retry: false,
@@ -85,6 +91,9 @@ export default function EditTask({ projectId, task, fetchProject }: Props) {
       });
       setOpen(false);
       void utils.tasks.getById.refetch(task.id);
+      if (refetchMyTasks) {
+        void utils.tasks.getMyTasks.invalidate();
+      }
       void utils.tasks.getAll.refetch({
         projectId: projectId,
         status: data.status,

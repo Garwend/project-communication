@@ -77,7 +77,7 @@ export default function TaskPage() {
   if (query.error) {
     return (
       <div>
-        <h1>Nie znaleziono zaadania</h1>
+        <h1>Nie znaleziono zadania</h1>
       </div>
     );
   }
@@ -104,6 +104,8 @@ export default function TaskPage() {
                 task={query.data}
                 openFile={open}
                 dialog={false}
+                redirectToMainPage={true}
+                fetchProject={true}
               />
             </header>
             <section className="mt-4 flex flex-1 flex-col overflow-auto">

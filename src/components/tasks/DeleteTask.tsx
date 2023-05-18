@@ -18,13 +18,15 @@ import { api } from "~/utils/api";
 type Props = {
   id: string;
   projectId: string;
-  redirectToMainPage: boolean;
+  redirectToMainPage?: boolean;
+  refetchMyTasks?: boolean;
 };
 
 export default function DeleteTask({
   id,
   projectId,
   redirectToMainPage,
+  refetchMyTasks,
 }: Props) {
   const router = useRouter();
   const utils = api.useContext();
@@ -35,6 +37,10 @@ export default function DeleteTask({
         status: data.status,
       });
       void utils.projects.getById.invalidate(projectId);
+      if (refetchMyTasks) {
+        void utils.tasks.getMyTasks.invalidate();
+      }
+
       if (redirectToMainPage) {
         void router.push("/");
       } else {

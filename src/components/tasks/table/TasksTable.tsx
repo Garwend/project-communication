@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -18,6 +19,9 @@ import {
   TableCell,
 } from "~/components/ui/table";
 import TasksTableToolbar from "~/components/tasks/table/TasksTableToolbar";
+import { type RouterOutputs } from "~/utils/api";
+
+type Task = RouterOutputs["tasks"]["getMyTasks"][0];
 
 interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, any>[];
@@ -28,6 +32,7 @@ export default function TasksTable<TData, TValue>({
   data,
   columns,
 }: TableProps<TData, any>) {
+  const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -45,13 +50,11 @@ export default function TasksTable<TData, TValue>({
     },
   });
 
-  // const router = useRouter();
-
-  // const openTask = async () => {
-  //   await router.push(`/?taskId=${task.id}`, `/tasks/${task.id}`, {
-  //     shallow: true,
-  //   });
-  // };
+  const openTask = async (taskId: string) => {
+    await router.push(`/?taskId=${taskId}`, `/tasks/${taskId}`, {
+      shallow: true,
+    });
+  };
 
   return (
     <>
@@ -82,7 +85,13 @@ export default function TasksTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  onClick={() => {
+                    const task = row.original as Task;
+                    void openTask(task.id);
+                  }}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(

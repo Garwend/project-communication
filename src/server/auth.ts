@@ -79,9 +79,6 @@ export const authOptions: NextAuthOptions = {
         },
       },
       from: env.EMAIL_FROM,
-      sendVerificationRequest({ url }) {
-        console.log("AUTH URL: ", url);
-      },
     }),
     /**
      * ...add more providers here.

@@ -89,6 +89,11 @@ export const projectRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1).max(64),
         description: z.string().optional(),
+        asanaIntegration: z.boolean(),
+        asanaEmail: z
+          .string()
+          .optional()
+          .transform((val) => (val === "" ? undefined : val)),
       })
     )
     .mutation(({ input, ctx }) => {
@@ -97,6 +102,8 @@ export const projectRouter = createTRPCRouter({
           name: input.name,
           description: input.description,
           ownerId: ctx.session.user.id,
+          asanaIntegration: input.asanaIntegration,
+          asanaEmail: input.asanaEmail,
         },
       });
       return project;
@@ -107,6 +114,11 @@ export const projectRouter = createTRPCRouter({
         id: z.string(),
         name: z.string().min(1).max(64),
         description: z.string().optional(),
+        asanaIntegration: z.boolean(),
+        asanaEmail: z
+          .string()
+          .optional()
+          .transform((val) => (val === "" ? undefined : val)),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -127,6 +139,8 @@ export const projectRouter = createTRPCRouter({
         data: {
           name: input.name,
           description: input.description,
+          asanaIntegration: input.asanaIntegration,
+          asanaEmail: input.asanaEmail ?? null,
         },
       });
 

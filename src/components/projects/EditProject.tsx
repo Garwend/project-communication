@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { z, type ZodType } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit } from "lucide-react";
 import { Button } from "~/components/ui/button";
@@ -17,6 +17,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { toastError } from "~/components/ui/toast";
+import { Switch } from "~/components/ui/switch";
 import { api } from "~/utils/api";
 
 type Props = {
@@ -26,6 +27,8 @@ type Props = {
 type FormData = {
   name: string;
   description?: string;
+  asanaIntegration: boolean;
+  asanaEmail?: string;
 };
 
 const schema: ZodType<FormData> = z.object({
@@ -34,6 +37,12 @@ const schema: ZodType<FormData> = z.object({
     .min(1, { message: "To pole nie może być puste" })
     .max(64, { message: "Maksymalna długość to 64 znaki" }),
   description: z.string(),
+  asanaIntegration: z.boolean(),
+  asanaEmail: z
+    .string()
+    .email({ message: "Niepoprawny adres email" })
+    .optional()
+    .or(z.literal("")),
 });
 
 export default function EditProject({ id }: Props) {
@@ -42,7 +51,12 @@ export default function EditProject({ id }: Props) {
 
   const mutation = api.projects.editProject.useMutation({
     onSuccess(data) {
-      reset({ name: data.name, description: data.description ?? "" });
+      reset({
+        name: data.name,
+        description: data.description ?? "",
+        asanaEmail: data.asanaEmail ?? "",
+        asanaIntegration: data.asanaIntegration,
+      });
       void utils.projects.getById.refetch(id);
       void utils.projects.getAll.refetch();
       setOpen(false);
@@ -53,21 +67,33 @@ export default function EditProject({ id }: Props) {
   });
 
   const {
+    watch,
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isDirty },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: utils.projects.getById.getData(id)?.name,
       description: utils.projects.getById.getData(id)?.description ?? "",
+      asanaIntegration: utils.projects.getById.getData(id)?.asanaIntegration,
+      asanaEmail: utils.projects.getById.getData(id)?.asanaEmail ?? "",
     },
   });
 
+  const watchAsanaIntegration = watch("asanaIntegration");
+
   const onSubmit = handleSubmit((data, e) => {
     e?.preventDefault();
-    mutation.mutate({ id: id, name: data.name, description: data.description });
+    mutation.mutate({
+      id: id,
+      name: data.name,
+      description: data.description,
+      asanaIntegration: data.asanaIntegration,
+      asanaEmail: data.asanaEmail,
+    });
   });
 
   return (
@@ -93,6 +119,31 @@ export default function EditProject({ id }: Props) {
                 </p>
               )}
             </div>
+            <div className="flex items-center space-x-2">
+              <Controller
+                name="asanaIntegration"
+                control={control}
+                render={({ field }) => (
+                  <Switch
+                    id="asanaIntegration"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                )}
+              />
+              <Label htmlFor="asanaIntegration">Asana</Label>
+            </div>
+            {watchAsanaIntegration ? (
+              <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="asanaEmail">Asana email</Label>
+                <Input id="asanaEmail" {...register("asanaEmail")} />
+                {errors.asanaEmail && (
+                  <p className="text-sm text-destructive">
+                    {errors.asanaEmail?.message}
+                  </p>
+                )}
+              </div>
+            ) : null}
             <div className="grid w-full items-center gap-1.5">
               <Label htmlFor="description">Opis</Label>
               <Textarea

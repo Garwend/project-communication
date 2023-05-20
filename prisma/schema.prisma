@@ -82,6 +82,8 @@ model Project {
     name              String
     description       String?           @db.Text
     status            Status            @default(NONE)
+    asanaIntegration  Boolean           @default(false)
+    asanaEmail        String?
     createdAt         DateTime          @default(now())
     participants      UsersInProjects[]
     invites           Invite[]

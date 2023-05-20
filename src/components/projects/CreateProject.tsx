@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { z, type ZodType } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
@@ -16,11 +16,14 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { toastError } from "~/components/ui/toast";
+import { Switch } from "~/components/ui/switch";
 import { api } from "~/utils/api";
 
 type FormData = {
   name: string;
   description?: string;
+  asanaIntegration: boolean;
+  asanaEmail?: string;
 };
 
 const schema: ZodType<FormData> = z.object({
@@ -29,6 +32,12 @@ const schema: ZodType<FormData> = z.object({
     .min(1, { message: "To pole nie może być puste" })
     .max(64, { message: "Maksymalna długość to 64 znaki" }),
   description: z.string(),
+  asanaIntegration: z.boolean(),
+  asanaEmail: z
+    .string()
+    .email({ message: "Niepoprawny adres email" })
+    .optional()
+    .or(z.literal("")),
 });
 
 export default function CreateProject() {
@@ -47,13 +56,20 @@ export default function CreateProject() {
   });
 
   const {
+    watch,
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      asanaIntegration: false,
+    },
   });
+
+  const watchAsanaIntegration = watch("asanaIntegration");
 
   const onSubmit = handleSubmit((data, e) => {
     e?.preventDefault();
@@ -86,6 +102,31 @@ export default function CreateProject() {
                 </p>
               )}
             </div>
+            <div className="flex items-center space-x-2">
+              <Controller
+                name="asanaIntegration"
+                control={control}
+                render={({ field }) => (
+                  <Switch
+                    id="asanaIntegration"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                )}
+              />
+              <Label htmlFor="asanaIntegration">Asana</Label>
+            </div>
+            {watchAsanaIntegration ? (
+              <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="asanaEmail">Asana email</Label>
+                <Input id="asanaEmail" {...register("asanaEmail")} />
+                {errors.asanaEmail && (
+                  <p className="text-sm text-destructive">
+                    {errors.asanaEmail?.message}
+                  </p>
+                )}
+              </div>
+            ) : null}
             <div className="grid w-full items-center gap-1.5">
               <Label htmlFor="description">Opis</Label>
               <Textarea

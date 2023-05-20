@@ -11,6 +11,7 @@ import {
   SheetTrigger,
 } from "~/components/ui/sheet";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import CustomLinkify from "~/components/ui/custom-linkify";
 
 import { api } from "~/utils/api";
 
@@ -44,7 +45,7 @@ export default function ProjectStageHistory({ id }: Props) {
                 </div>
 
                 <SheetDescription className="whitespace-break-spaces">
-                  {stage.stage}
+                  <CustomLinkify>{stage.stage}</CustomLinkify>
                 </SheetDescription>
               </div>
             ))}

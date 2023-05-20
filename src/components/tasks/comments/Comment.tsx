@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import CustomLinkify from "~/components/ui/custom-linkify";
 import DeleteComment from "./DeleteComment";
 import EditComment from "./EditComment";
 import { getUserFirstLetters } from "~/lib/utils";
@@ -68,7 +69,9 @@ export default function Comment({ name, text, date, userId, id }: Props) {
             </DropdownMenu>
           )}
         </section>
-        <p className="mt-2 whitespace-break-spaces">{text}</p>
+        <p className="mt-2 whitespace-break-spaces">
+          <CustomLinkify>{text}</CustomLinkify>
+        </p>
       </div>
       <DeleteComment
         open={openConfirmDelete}

@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import DeleteAnswer from "./DeleteAnswer";
 import EditAnswer from "./EditAnswer";
 import { getUserFirstLetters } from "~/lib/utils";
+import CustomLinkify from "~/components/ui/custom-linkify";
 
 type Props = {
   id: string;
@@ -68,7 +69,9 @@ export default function Answer({ name, text, date, userId, id }: Props) {
             </DropdownMenu>
           )}
         </section>
-        <p className="mt-2 whitespace-break-spaces">{text}</p>
+        <p className="mt-2 whitespace-break-spaces">
+          <CustomLinkify>{text}</CustomLinkify>
+        </p>
       </div>
       <DeleteAnswer
         open={openConfirmDelete}

@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import CreateProjectStage from "./CreateProjectStage";
 import ProjectStageHistory from "./ProjectStageHistory";
+import CustomLinkify from "~/components/ui/custom-linkify";
 
 import { api } from "~/utils/api";
 
@@ -28,7 +29,11 @@ export default function ProjectStage({ id }: Props) {
       </CardHeader>
       <CardContent className="h-48">
         <ScrollArea className="h-full pr-4">
-          <p>{utils.projects.getById.getData(id)?.stages[0]?.stage}</p>
+          <p className="whitespace-break-spaces">
+            <CustomLinkify>
+              {utils.projects.getById.getData(id)?.stages[0]?.stage}
+            </CustomLinkify>
+          </p>
         </ScrollArea>
       </CardContent>
     </Card>

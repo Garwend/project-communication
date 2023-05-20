@@ -54,6 +54,8 @@
     "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
     "jotai": "^2.0.4",
+    "linkify-react": "^4.1.1",
+    "linkifyjs": "^4.1.1",
     "lucide-react": "^0.176.0",
     "next": "^13.2.4",
     "next-auth": "^4.21.0",

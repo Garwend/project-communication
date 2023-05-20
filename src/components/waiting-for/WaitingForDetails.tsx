@@ -21,7 +21,7 @@ import {
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Separator } from "~/components/ui/separator";
 import { toastError } from "~/components/ui/toast";
-
+import CustomLinkify from "~/components/ui/custom-linkify";
 import EditWaitingFor from "./EditWaitingFor";
 import DeleteWaitingFor from "./DeleteWaitingFor";
 import FileItem from "../files/FileItem";
@@ -138,7 +138,9 @@ export default function WaitingForDetails({
               <Separator className="my-4" />
               <ScrollArea className="pr-4">
                 <div className="max-h-48">
-                  <SheetDescription>{query.data?.description}</SheetDescription>
+                  <SheetDescription className="whitespace-break-spaces">
+                    <CustomLinkify>{query.data?.description}</CustomLinkify>
+                  </SheetDescription>
                 </div>
               </ScrollArea>
               {query.data?.files === undefined ||

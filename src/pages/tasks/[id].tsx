@@ -6,6 +6,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import CommentList from "~/components/tasks/comments/CommentList";
 import CreateComment from "~/components/tasks/comments/CreateComment";
 import TaskDetailsHeader from "~/components/tasks/TaskDetailsHeader";
+import CustomLinkify from "~/components/ui/custom-linkify";
 import { Skeleton } from "~/components/ui/skeleton";
 import { toastError } from "~/components/ui/toast";
 import { api } from "~/utils/api";
@@ -112,7 +113,7 @@ export default function TaskPage() {
               <ScrollArea className="pr-4">
                 {query.data?.description?.length !== 0 ? (
                   <p className="whitespace-break-spaces text-sm text-muted-foreground">
-                    {query.data?.description}
+                    <CustomLinkify>{query.data?.description}</CustomLinkify>
                   </p>
                 ) : null}
                 <CommentList id={query.data.id} />

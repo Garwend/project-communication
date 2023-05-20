@@ -2,6 +2,7 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
 import { useRouter } from "next/router";
+import CustomLinkify from "../ui/custom-linkify";
 import {
   Sheet,
   SheetContent,
@@ -132,7 +133,7 @@ export default function TaskDetails({
               <ScrollArea className="pr-4">
                 {query.data?.description?.length !== 0 ? (
                   <SheetDescription className="whitespace-break-spaces">
-                    {query.data?.description}
+                    <CustomLinkify>{query.data?.description}</CustomLinkify>
                   </SheetDescription>
                 ) : null}
                 <CommentList id={query.data.id} />

@@ -17,7 +17,7 @@ export const answerRouter = createTRPCRouter({
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
   }),

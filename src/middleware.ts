@@ -8,7 +8,10 @@ export default withAuth(
 
     const isAuth = await getToken({ req });
 
-    if (pathname.startsWith("/login")) {
+    if (
+      pathname.startsWith("/login") ||
+      pathname.startsWith("/verify-request")
+    ) {
       if (isAuth) {
         return NextResponse.redirect(new URL("/", req.url));
       }
@@ -26,5 +29,12 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/", "/login", "/profile", "/projects/:path*", "/tasks/:path*"],
+  matcher: [
+    "/",
+    "/login",
+    "/verify-request",
+    "/profile",
+    "/projects/:path*",
+    "/tasks/:path*",
+  ],
 };

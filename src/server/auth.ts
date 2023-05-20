@@ -4,10 +4,14 @@ import {
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
+import { createTransport } from "nodemailer";
+import { render } from "@react-email/render";
 import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
+
+import SignInTemplate from "~/emails/sign-in-template";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -72,13 +76,50 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       server: {
         host: env.EMAIL_SERVER_HOST,
-        port: env.EMAIL_SERVER_PORT,
+        port: Number(env.EMAIL_SERVER_PORT),
         auth: {
           user: env.EMAIL_SERVER_USER,
           pass: env.EMAIL_SERVER_PASSWORD,
         },
       },
       from: env.EMAIL_FROM,
+      async sendVerificationRequest(params) {
+        const { identifier, url, provider } = params;
+        const transport = createTransport(provider.server);
+        const user = await prisma.user.findFirst({
+          where: {
+            email: identifier,
+          },
+          select: {
+            emailVerified: true,
+          },
+        });
+
+        const html = render(
+          SignInTemplate({ url, register: user?.emailVerified ? false : true }),
+          {
+            pretty: true,
+          }
+        );
+        const text = render(
+          SignInTemplate({ url, register: user?.emailVerified ? false : true }),
+          {
+            plainText: true,
+          }
+        );
+
+        const result = await transport.sendMail({
+          to: identifier,
+          from: provider.from,
+          subject: user?.emailVerified ? `Zaloguj się` : "Zarejestruj się",
+          text: text,
+          html: html,
+        });
+        const failed = result.rejected.concat(result.pending).filter(Boolean);
+        if (failed.length) {
+          throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`);
+        }
+      },
     }),
     /**
      * ...add more providers here.

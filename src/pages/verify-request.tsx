@@ -4,8 +4,20 @@ import {
   CardTitle,
   CardDescription,
 } from "~/components/ui/card";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function VerifyRequest() {
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      void router.push("/");
+    }
+  }, [session, router]);
+
   return (
     <Card className="w-[350px]">
       <CardHeader>

@@ -84,7 +84,7 @@ export default function EditTask({
     onSuccess(data) {
       reset({
         name: data.name,
-        description: task.description ?? "",
+        description: data.description ?? "",
         dueDate: data.dueDate ?? undefined,
         priority: data.priority,
         assignedToId: data.assignedToId ?? "",

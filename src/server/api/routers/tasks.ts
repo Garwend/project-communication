@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { arrayMove } from "@dnd-kit/sortable";
+// import { createTransport } from "nodemailer";
+// import { env } from "~/env.mjs";
 
 export const tasksRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -139,6 +141,25 @@ export const tasksRouter = createTRPCRouter({
           WAITING_ORDER: [task.id, ...project.WAITING_ORDER],
         },
       });
+
+      // if (project.asanaIntegration && project.asanaEmail) {
+      //   const transporter = createTransport({
+      //     host: env.EMAIL_SERVER_HOST,
+      //     port: Number(env.EMAIL_SERVER_PORT),
+      //     secure: false,
+      //     auth: {
+      //       user: env.EMAIL_SERVER_USER,
+      //       pass: env.EMAIL_SERVER_PASSWORD,
+      //     },
+      //   });
+
+      //   await transporter.sendMail({
+      //     to: project.asanaEmail,
+      //     from: env.EMAIL_FROM,
+      //     subject: task.name,
+      //     text: task.description ?? "",
+      //   });
+      // }
 
       return task;
     }),

@@ -1,19 +1,19 @@
-import { useRef } from "react";
+import React from "react";
 import { useSession } from "next-auth/react";
 import Message from "./Message";
 import { api } from "~/utils/api";
 
 type Props = {
   projectId: string;
+  scrollBoxRef: React.RefObject<HTMLDivElement>;
 };
 
-export default function MessageBox({ projectId }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
+export default function MessageBox({ projectId, scrollBoxRef }: Props) {
   const query = api.chat.getMessages.useQuery(projectId, {
     onSuccess() {
       setTimeout(() => {
-        if (ref.current) {
-          ref.current.scrollIntoView();
+        if (scrollBoxRef && scrollBoxRef.current) {
+          scrollBoxRef.current.scrollIntoView();
         }
       }, 100);
     },
@@ -35,7 +35,7 @@ export default function MessageBox({ projectId }: Props) {
           message={message}
         />
       ))}
-      <div style={{ float: "left", clear: "both" }} ref={ref}></div>
+      <div style={{ float: "left", clear: "both" }} ref={scrollBoxRef}></div>
     </div>
   );
 }

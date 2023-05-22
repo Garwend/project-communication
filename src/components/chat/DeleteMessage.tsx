@@ -19,12 +19,9 @@ type Props = {
 };
 
 export default function DeleteMessage({ id, open, onOpenChange }: Props) {
-  const utils = api.useContext();
-
   const mutation = api.chat.deleteMessage.useMutation({
-    onSuccess(data) {
+    onSuccess() {
       onOpenChange(false);
-      void utils.chat.getMessages.invalidate(data.projectId);
     },
     onError() {
       toastError("Coś poszło nie tak podczas usuwania wiadomości");

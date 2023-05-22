@@ -29,13 +29,10 @@ const schema: ZodType<FormData> = z.object({
 });
 
 export default function EditMessage({ id, text, open, onOpenChange }: Props) {
-  const utils = api.useContext();
-
   const mutation = api.chat.updateMessage.useMutation({
     onSuccess(data) {
       reset({ text: data.text });
       onOpenChange(false);
-      void utils.chat.getMessages.invalidate(data.projectId);
     },
     onError() {
       toastError("Nie udało się edytować wiadomości");

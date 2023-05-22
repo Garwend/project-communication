@@ -22,12 +22,9 @@ const schema: ZodType<FormData> = z.object({
 });
 
 export default function SendMessage({ projectId }: Props) {
-  const utils = api.useContext();
-
   const mutation = api.chat.createMessage.useMutation({
     onSuccess() {
       reset();
-      void utils.chat.getMessages.invalidate(projectId);
     },
     onError() {
       toastError("Nie udało sie wysłać wiadomości");

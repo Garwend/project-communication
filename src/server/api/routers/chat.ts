@@ -62,6 +62,7 @@ export const chatRouter = createTRPCRouter({
           ],
         },
         select: {
+          ownerId: true,
           participants: {
             select: {
               userId: true,
@@ -70,23 +71,40 @@ export const chatRouter = createTRPCRouter({
         },
       });
 
-      const message = ctx.prisma.message.create({
+      const message = await ctx.prisma.message.create({
         data: {
           projectId: input.projectId,
           createdById: ctx.session.user.id,
           text: input.text,
         },
+        include: {
+          createdBy: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
       });
 
+      const channelsId = [
+        project.ownerId,
+        ...project.participants.map((user) => user.userId),
+      ];
+
       const client = new Ably.Rest(env.ABLY_API_KEY);
-      project.participants.forEach((user) => {
-        if (user.userId !== ctx.session.user.id) {
-          const channel = client.channels.get(user.userId);
+      channelsId.forEach((userId) => {
+        const channel = client.channels.get(userId);
+        if (userId !== ctx.session.user.id) {
           void channel.publish("notify-message", {
             message: input.text,
             name: ctx.session.user.name ?? ctx.session.user.email ?? "",
           });
         }
+        void channel.publish("chat-update", {
+          type: "create",
+          message: message,
+        });
       });
 
       return message;
@@ -103,12 +121,51 @@ export const chatRouter = createTRPCRouter({
         where: { id: input.id, createdById: ctx.session.user.id },
       });
 
-      return await ctx.prisma.message.update({
+      const message = await ctx.prisma.message.update({
         where: { id: input.id },
         data: {
           text: input.text,
         },
+        include: {
+          createdBy: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
       });
+
+      const project = await ctx.prisma.project.findFirstOrThrow({
+        where: {
+          id: message.projectId,
+        },
+        select: {
+          ownerId: true,
+          participants: {
+            select: {
+              userId: true,
+            },
+          },
+        },
+      });
+
+      const channelsId = [
+        project.ownerId,
+        ...project.participants.map((user) => user.userId),
+      ];
+
+      const client = new Ably.Rest(env.ABLY_API_KEY);
+      channelsId.forEach((userId) => {
+        const channel = client.channels.get(userId);
+
+        void channel.publish("chat-update", {
+          type: "update",
+          message: message,
+        });
+      });
+
+      return message;
     }),
   deleteMessage: protectedProcedure
     .input(z.string())
@@ -117,6 +174,37 @@ export const chatRouter = createTRPCRouter({
         where: { id: input, createdById: ctx.session.user.id },
       });
 
-      return await ctx.prisma.message.delete({ where: { id: input } });
+      const message = await ctx.prisma.message.delete({ where: { id: input } });
+
+      const project = await ctx.prisma.project.findFirstOrThrow({
+        where: {
+          id: message.projectId,
+        },
+        select: {
+          ownerId: true,
+          participants: {
+            select: {
+              userId: true,
+            },
+          },
+        },
+      });
+
+      const channelsId = [
+        project.ownerId,
+        ...project.participants.map((user) => user.userId),
+      ];
+
+      const client = new Ably.Rest(env.ABLY_API_KEY);
+      channelsId.forEach((userId) => {
+        const channel = client.channels.get(userId);
+
+        void channel.publish("chat-update", {
+          type: "delete",
+          message: message,
+        });
+      });
+
+      return message;
     }),
 });

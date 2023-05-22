@@ -63,6 +63,7 @@ model User {
     assignedTasks       Task[]            @relation("AssignedTasks")
     createdTasks        Task[]            @relation("CreatedTasks")
     comments            Comment[]
+    messages            Message[]
 }
 
 model VerificationToken {
@@ -91,6 +92,7 @@ model Project {
     files             File[]
     watitngFor        WatitngFor[]
     tasks             Task[]
+    messages          Message[]
     WAITING_ORDER     String[]
     IN_PROGRESS_ORDER String[]
     FINISHED_ORDER    String[]
@@ -152,6 +154,16 @@ enum TaskStatus {
     WAITING
     IN_PROGRESS
     FINISHED
+}
+
+model Message {
+    id          String   @id @default(cuid())
+    text        String   @db.Text
+    project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId   String
+    createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+    createdById String
+    createdAt   DateTime @default(now())
 }
 
 model Comment {

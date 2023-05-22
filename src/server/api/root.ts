@@ -10,6 +10,7 @@ import { answerRouter } from "./routers/answers";
 import { tasksRouter } from "./routers/tasks";
 import { commentsRouter } from "./routers/comments";
 import { searchRouter } from "./routers/search";
+import { chatRouter } from "./routers/chat";
 
 /**
  * This is the primary router for your server.
@@ -28,6 +29,7 @@ export const appRouter = createTRPCRouter({
   tasks: tasksRouter,
   comments: commentsRouter,
   search: searchRouter,
+  chat: chatRouter,
 });
 
 // export type definition of API

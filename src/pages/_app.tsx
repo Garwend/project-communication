@@ -3,12 +3,16 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
-
+import { configureAbly } from "@ably-labs/react-hooks";
 import Layout from "~/components/layout/Layout";
 
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+
+configureAbly({
+  authUrl: "/api/ably/token",
+});
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

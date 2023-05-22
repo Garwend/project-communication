@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import * as Ably from "ably/promises";
+import { env } from "~/env.mjs";
 
 export const chatRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
@@ -51,13 +53,20 @@ export const chatRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      await ctx.prisma.project.findFirstOrThrow({
+      const project = await ctx.prisma.project.findFirstOrThrow({
         where: {
           id: input.projectId,
           OR: [
             { ownerId: ctx.session.user.id },
             { participants: { some: { userId: ctx.session.user.id } } },
           ],
+        },
+        select: {
+          participants: {
+            select: {
+              userId: true,
+            },
+          },
         },
       });
 
@@ -67,6 +76,17 @@ export const chatRouter = createTRPCRouter({
           createdById: ctx.session.user.id,
           text: input.text,
         },
+      });
+
+      const client = new Ably.Rest(env.ABLY_API_KEY);
+      project.participants.forEach((user) => {
+        if (user.userId !== ctx.session.user.id) {
+          const channel = client.channels.get(user.userId);
+          void channel.publish("notify-message", {
+            message: input.text,
+            name: ctx.session.user.name ?? ctx.session.user.email ?? "",
+          });
+        }
       });
 
       return message;

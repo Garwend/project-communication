@@ -17,7 +17,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { toastError } from "~/components/ui/toast";
-import { Switch } from "~/components/ui/switch";
+// import { Switch } from "~/components/ui/switch";
 import { api } from "~/utils/api";
 
 type Props = {
@@ -27,8 +27,8 @@ type Props = {
 type FormData = {
   name: string;
   description?: string;
-  asanaIntegration: boolean;
-  asanaEmail?: string;
+  // asanaIntegration: boolean;
+  // asanaEmail?: string;
 };
 
 const schema: ZodType<FormData> = z.object({
@@ -37,12 +37,12 @@ const schema: ZodType<FormData> = z.object({
     .min(1, { message: "To pole nie może być puste" })
     .max(64, { message: "Maksymalna długość to 64 znaki" }),
   description: z.string(),
-  asanaIntegration: z.boolean(),
-  asanaEmail: z
-    .string()
-    .email({ message: "Niepoprawny adres email" })
-    .optional()
-    .or(z.literal("")),
+  // asanaIntegration: z.boolean(),
+  // asanaEmail: z
+  //   .string()
+  //   .email({ message: "Niepoprawny adres email" })
+  //   .optional()
+  //   .or(z.literal("")),
 });
 
 export default function EditProject({ id }: Props) {
@@ -54,8 +54,8 @@ export default function EditProject({ id }: Props) {
       reset({
         name: data.name,
         description: data.description ?? "",
-        asanaEmail: data.asanaEmail ?? "",
-        asanaIntegration: data.asanaIntegration,
+        // asanaEmail: data.asanaEmail ?? "",
+        // asanaIntegration: data.asanaIntegration,
       });
       void utils.projects.getById.refetch(id);
       void utils.projects.getAll.refetch();
@@ -67,23 +67,23 @@ export default function EditProject({ id }: Props) {
   });
 
   const {
-    watch,
+    // watch,
     register,
     handleSubmit,
     reset,
-    control,
+    // control,
     formState: { errors, isDirty },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: utils.projects.getById.getData(id)?.name,
       description: utils.projects.getById.getData(id)?.description ?? "",
-      asanaIntegration: utils.projects.getById.getData(id)?.asanaIntegration,
-      asanaEmail: utils.projects.getById.getData(id)?.asanaEmail ?? "",
+      // asanaIntegration: utils.projects.getById.getData(id)?.asanaIntegration,
+      // asanaEmail: utils.projects.getById.getData(id)?.asanaEmail ?? "",
     },
   });
 
-  const watchAsanaIntegration = watch("asanaIntegration");
+  // const watchAsanaIntegration = watch("asanaIntegration");
 
   const onSubmit = handleSubmit((data, e) => {
     e?.preventDefault();
@@ -91,8 +91,8 @@ export default function EditProject({ id }: Props) {
       id: id,
       name: data.name,
       description: data.description,
-      asanaIntegration: data.asanaIntegration,
-      asanaEmail: data.asanaEmail,
+      // asanaIntegration: data.asanaIntegration,
+      // asanaEmail: data.asanaEmail,
     });
   });
 
@@ -119,7 +119,7 @@ export default function EditProject({ id }: Props) {
                 </p>
               )}
             </div>
-            <div className="flex items-center space-x-2">
+            {/* <div className="flex items-center space-x-2">
               <Controller
                 name="asanaIntegration"
                 control={control}
@@ -143,7 +143,7 @@ export default function EditProject({ id }: Props) {
                   </p>
                 )}
               </div>
-            ) : null}
+            ) : null} */}
             <div className="grid w-full items-center gap-1.5">
               <Label htmlFor="description">Opis</Label>
               <Textarea

@@ -64,6 +64,7 @@ function ChatChannel({ userId, projectId, scrollBoxRef }: Props) {
         return old;
       });
     }
+    void utils.chat.getAll.invalidate();
   });
 
   return <></>;

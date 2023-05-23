@@ -39,6 +39,7 @@ export const fileRouter = createTRPCRouter({
           type: input.type,
           waitingForId: input.waitingForId,
           taskId: input.taskId,
+          createdById: ctx.session.user.id,
         },
       });
 

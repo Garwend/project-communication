@@ -159,6 +159,12 @@ export default function WaitingForDetails({
                               name={file.name}
                               type={file.type}
                               waitingForId={id}
+                              createdAt={file.createdAt}
+                              createdBy={
+                                file.createdBy.name ??
+                                file.createdBy.email ??
+                                ""
+                              }
                             />
                           ))}
                         </AccordionContent>

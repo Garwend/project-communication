@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { formatDistance } from "date-fns";
+import { pl } from "date-fns/locale";
 import { Button } from "~/components/ui/button";
 import { FileImage, File, MoreVertical, Download, Trash2 } from "lucide-react";
 import {
@@ -7,7 +9,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { toastError } from "~/components/ui/toast";
+import { getUserFirstLetters } from "~/lib/utils";
 
 import { api } from "~/utils/api";
 
@@ -22,6 +26,8 @@ type Props = {
   type?: string;
   waitingForId?: string;
   taskId?: string;
+  createdAt: Date;
+  createdBy: string;
 };
 
 export default function FileItem({
@@ -31,6 +37,8 @@ export default function FileItem({
   type,
   waitingForId,
   taskId,
+  createdAt,
+  createdBy,
 }: Props) {
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const mutation = api.files.getDownloadS3Url.useMutation({
@@ -44,15 +52,32 @@ export default function FileItem({
 
   return (
     <div className="mb-2 flex select-none flex-row items-center justify-between rounded-lg border border-border bg-background p-2">
-      <div className="flex flex-row">
-        <div className="mr-2 inline-flex items-center justify-center rounded-md bg-primary p-1 text-primary-foreground">
-          {type?.startsWith("image") ? (
-            <FileImage className="h-4 w-4" />
-          ) : (
-            <File className="h-4 w-4" />
-          )}
+      <div className="">
+        <div className="flex flex-row">
+          <div className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-md bg-primary p-1 text-primary-foreground">
+            {type?.startsWith("image") ? (
+              <FileImage className="h-4 w-4" />
+            ) : (
+              <File className="h-4 w-4" />
+            )}
+          </div>
+          <p>{name}</p>
         </div>
-        <p>{name}</p>
+        <div className="mt-4 flex flex-row items-center gap-2">
+          <Avatar className="h-7 w-7">
+            <AvatarImage src="" />
+            <AvatarFallback className="text-xs">
+              {getUserFirstLetters(createdBy)}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-sm text-muted-foreground">
+            dodane{" "}
+            {formatDistance(createdAt, new Date(), {
+              locale: pl,
+              addSuffix: true,
+            })}
+          </span>
+        </div>
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

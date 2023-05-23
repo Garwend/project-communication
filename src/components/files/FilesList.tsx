@@ -104,6 +104,8 @@ export default function FilesList({ id }: Props) {
                   name={file.name}
                   type={file.type}
                   waitingForId={file.waitingForId ?? undefined}
+                  createdAt={file.createdAt}
+                  createdBy={file.createdBy.name ?? file.createdBy.email ?? ""}
                 />
               ))}
             </ScrollArea>

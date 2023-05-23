@@ -90,6 +90,12 @@ export const tasksRouter = createTRPCRouter({
             name: true,
             type: true,
             createdAt: true,
+            createdBy: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
           },
           orderBy: {
             createdAt: "desc",

@@ -169,6 +169,10 @@ export default function TaskDetailsHeader({
                       name={file.name}
                       type={file.type}
                       taskId={task.id}
+                      createdAt={file.createdAt}
+                      createdBy={
+                        file.createdBy.name ?? file.createdBy.email ?? ""
+                      }
                     />
                   ))}
                 </AccordionContent>

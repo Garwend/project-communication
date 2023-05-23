@@ -36,6 +36,12 @@ export const projectRouter = createTRPCRouter({
             type: true,
             createdAt: true,
             waitingForId: true,
+            createdBy: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
           },
           orderBy: {
             createdAt: "desc",

@@ -135,19 +135,33 @@ export const chatRouter = createTRPCRouter({
       ];
 
       const client = new Ably.Rest(env.ABLY_API_KEY);
-      channelsId.forEach((userId) => {
+      for (const userId of channelsId) {
         const channel = client.channels.get(userId);
         if (userId !== ctx.session.user.id) {
-          void channel.publish("notify-message", {
+          await channel.publish("notify-message", {
             message: input.text,
             name: ctx.session.user.name ?? ctx.session.user.email ?? "",
           });
         }
-        void channel.publish("chat-update", {
+        await channel.publish("chat-update", {
           type: "create",
           message: message,
         });
-      });
+      }
+
+      // channelsId.forEach((userId) => {
+      //   const channel = client.channels.get(userId);
+      //   if (userId !== ctx.session.user.id) {
+      //     void channel.publish("notify-message", {
+      //       message: input.text,
+      //       name: ctx.session.user.name ?? ctx.session.user.email ?? "",
+      //     });
+      //   }
+      //   void channel.publish("chat-update", {
+      //     type: "create",
+      //     message: message,
+      //   });
+      // });
 
       return message;
     }),
@@ -198,14 +212,21 @@ export const chatRouter = createTRPCRouter({
       ];
 
       const client = new Ably.Rest(env.ABLY_API_KEY);
-      channelsId.forEach((userId) => {
+      for (const userId of channelsId) {
         const channel = client.channels.get(userId);
-
-        void channel.publish("chat-update", {
+        await channel.publish("chat-update", {
           type: "update",
           message: message,
         });
-      });
+      }
+      // channelsId.forEach((userId) => {
+      //   const channel = client.channels.get(userId);
+
+      //   void channel.publish("chat-update", {
+      //     type: "update",
+      //     message: message,
+      //   });
+      // });
 
       return message;
     }),
@@ -238,14 +259,23 @@ export const chatRouter = createTRPCRouter({
       ];
 
       const client = new Ably.Rest(env.ABLY_API_KEY);
-      channelsId.forEach((userId) => {
-        const channel = client.channels.get(userId);
 
-        void channel.publish("chat-update", {
+      for (const userId of channelsId) {
+        const channel = client.channels.get(userId);
+        await channel.publish("chat-update", {
           type: "delete",
           message: message,
         });
-      });
+      }
+
+      // channelsId.forEach((userId) => {
+      //   const channel = client.channels.get(userId);
+
+      //   void channel.publish("chat-update", {
+      //     type: "delete",
+      //     message: message,
+      //   });
+      // });
 
       return message;
     }),

@@ -36,5 +36,6 @@ export const config = {
     "/profile",
     "/projects/:path*",
     "/tasks/:path*",
+    "/chat/:path*",
   ],
 };

@@ -118,14 +118,14 @@ export default function Chat() {
   return (
     <div className="flex h-full w-full flex-row gap-2">
       <ChatList />
+      <ChatChannel
+        key={id}
+        userId={session.user.id}
+        projectId={id}
+        scrollBoxRef={ref}
+      />
       {id ? (
         <div className="flex flex-1 flex-col gap-4">
-          <ChatChannel
-            key={id}
-            userId={session.user.id}
-            projectId={id}
-            scrollBoxRef={ref}
-          />
           <MessageBox projectId={id} scrollBoxRef={ref} />
           <SendMessage projectId={id} />
         </div>

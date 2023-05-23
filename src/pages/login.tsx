@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { z, type ZodType } from "zod";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
@@ -35,14 +36,18 @@ export default function Login() {
     resolver: zodResolver(schema),
   });
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
+
   const onSubmit = handleSubmit(async (data, e) => {
     e?.preventDefault();
-
+    setIsLoading(true);
     try {
       await signIn("email", { email: data.email });
     } catch {
       setError("email", { type: "custom", message: "nie udało się zalogować" });
     }
+    setIsLoading(false);
   });
 
   return (
@@ -60,7 +65,7 @@ export default function Login() {
           <p className="mt-1 h-5 text-sm text-destructive">
             {errors.email?.message}
           </p>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={isLoading}>
             <Mail className="mr-2 h-4 w-4" />
             Zaloguj
           </Button>
@@ -79,7 +84,11 @@ export default function Login() {
           type="submit"
           variant="outline"
           className="w-full"
-          onClick={() => void signIn("google")}
+          onClick={() => {
+            setIsGoogleLoading(true);
+            void signIn("google");
+          }}
+          disabled={isLoading || isGoogleLoading}
         >
           <Icons.google className="mr-2 h-4 w-4" />
           Google

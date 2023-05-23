@@ -16,7 +16,7 @@ import CustomLinkify from "~/components/ui/custom-linkify";
 import DeleteMessage from "./DeleteMessage";
 import EditMessage from "./EditMessage";
 
-type Message = RouterOutputs["chat"]["getMessages"][0];
+type Message = RouterOutputs["chat"]["getMessages"]["items"][0];
 
 type Props = {
   message: Message;

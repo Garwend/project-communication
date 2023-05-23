@@ -18,5 +18,8 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ["justch4t-bucket.s3.eu-central-1.amazonaws.com"],
+  },
 };
 export default config;

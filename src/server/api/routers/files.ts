@@ -75,6 +75,30 @@ export const fileRouter = createTRPCRouter({
 
       return await getSignedUrl(s3, getObjectCommand, { expiresIn: 60 });
     }),
+  getImageS3Url: protectedProcedure
+    .input(z.object({ id: z.string(), projectId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      await ctx.prisma.project.findFirstOrThrow({
+        where: {
+          id: input.projectId,
+          OR: [
+            { ownerId: ctx.session.user.id },
+            { participants: { some: { userId: ctx.session.user.id } } },
+          ],
+        },
+      });
+
+      const file = await ctx.prisma.file.findFirstOrThrow({
+        where: { id: input.id },
+      });
+
+      const getObjectCommand = new GetObjectCommand({
+        Bucket: env.AWS_S3_BUCKET_NAME,
+        Key: file.id,
+      });
+
+      return await getSignedUrl(s3, getObjectCommand, { expiresIn: 60 });
+    }),
   delete: protectedProcedure
     .input(z.object({ id: z.string(), projectId: z.string() }))
     .mutation(async ({ ctx, input }) => {

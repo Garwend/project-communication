@@ -3,7 +3,15 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "~/components/ui/input";
-import { Card, CardContent, CardFooter } from "~/components/ui/card";
+import { Mail } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "~/components/ui/card";
+import { Icons } from "~/components/ui/icons";
 import { Button } from "~/components/ui/button";
 
 type FormData = {
@@ -38,20 +46,45 @@ export default function Login() {
   });
 
   return (
-    <form onSubmit={(e) => void onSubmit(e)}>
-      <Card className="w-[350px]">
-        <CardContent className="pb-2 pt-6">
+    <Card className="w-[350px]">
+      <CardHeader className="pb-0">
+        <CardTitle className="text-2xl">Zaloguj się</CardTitle>
+        <CardDescription>
+          Podaj swój email żeby się zalogować jeśli nie masz konta zostaniesz
+          zarejestrowany.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pt-6">
+        <form onSubmit={(e) => void onSubmit(e)}>
           <Input type="email" placeholder="Email" {...register("email")} />
           <p className="mt-1 h-5 text-sm text-destructive">
             {errors.email?.message}
           </p>
-        </CardContent>
-        <CardFooter>
           <Button type="submit" className="w-full">
-            Zaloguj się
+            <Mail className="mr-2 h-4 w-4" />
+            Zaloguj
           </Button>
-        </CardFooter>
-      </Card>
-    </form>
+        </form>
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Lub
+            </span>
+          </div>
+        </div>
+        <Button
+          type="submit"
+          variant="outline"
+          className="w-full"
+          onClick={() => void signIn("google")}
+        >
+          <Icons.google className="mr-2 h-4 w-4" />
+          Google
+        </Button>
+      </CardContent>
+    </Card>
   );
 }

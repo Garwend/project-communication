@@ -64,6 +64,7 @@ model User {
     createdTasks        Task[]            @relation("CreatedTasks")
     comments            Comment[]
     messages            Message[]
+    lastChatView        LastChatView[]
 }
 
 model VerificationToken {
@@ -96,6 +97,7 @@ model Project {
     WAITING_ORDER     String[]
     IN_PROGRESS_ORDER String[]
     FINISHED_ORDER    String[]
+    lastChatView      LastChatView[]
 }
 
 enum Status {
@@ -221,4 +223,15 @@ model UsersInProjects {
     assignedAt DateTime @default(now())
 
     @@id([userId, projectId])
+}
+
+model LastChatView {
+    id        String   @id @default(cuid())
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+    project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId String
+    date      DateTime @default(now())
+
+    @@unique([userId, projectId])
 }

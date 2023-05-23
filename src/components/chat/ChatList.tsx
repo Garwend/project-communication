@@ -2,6 +2,18 @@ import ChatItem from "~/components/chat/ChatItem";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { api } from "~/utils/api";
 
+const checkIfNewMessage = (messageDate?: Date, lastChatViewDate?: Date) => {
+  if (!messageDate || !lastChatViewDate) {
+    return false;
+  }
+
+  if (messageDate < lastChatViewDate) {
+    return false;
+  }
+
+  return true;
+};
+
 export default function ChatList() {
   const query = api.chat.getAll.useQuery();
 
@@ -18,6 +30,10 @@ export default function ChatList() {
             name={item.name}
             id={item.id}
             lastMessage={item.messages[0]?.text ?? ""}
+            newMessage={checkIfNewMessage(
+              item.messages[0]?.createdAt,
+              item.lastChatView[0]?.date
+            )}
           />
         ))}
       </ScrollArea>

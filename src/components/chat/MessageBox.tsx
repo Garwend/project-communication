@@ -9,6 +9,8 @@ type Props = {
 };
 
 export default function MessageBox({ projectId, scrollBoxRef }: Props) {
+  const utils = api.useContext();
+
   const query = api.chat.getMessages.useQuery(projectId, {
     onSuccess() {
       setTimeout(() => {
@@ -18,6 +20,13 @@ export default function MessageBox({ projectId, scrollBoxRef }: Props) {
       }, 100);
     },
   });
+
+  api.chat.viewChat.useQuery(projectId, {
+    onSettled() {
+      void utils.chat.getAll.invalidate();
+    },
+  });
+
   const { data: session } = useSession();
 
   if (query.isLoading || query.error) {

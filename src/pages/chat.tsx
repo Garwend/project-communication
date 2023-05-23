@@ -63,8 +63,10 @@ function ChatChannel({ userId, projectId, scrollBoxRef }: Props) {
         }
         return old;
       });
+      void utils.chat.viewChat.invalidate(projectId);
+    } else {
+      void utils.chat.getAll.invalidate();
     }
-    void utils.chat.getAll.invalidate();
   });
 
   return <></>;

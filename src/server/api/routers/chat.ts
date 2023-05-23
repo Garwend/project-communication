@@ -19,9 +19,18 @@ export const chatRouter = createTRPCRouter({
           take: 1,
           select: {
             text: true,
+            createdAt: true,
           },
           orderBy: {
             createdAt: "desc",
+          },
+        },
+        lastChatView: {
+          where: {
+            userId: ctx.session.user.id,
+          },
+          select: {
+            date: true,
           },
         },
       },
@@ -216,5 +225,25 @@ export const chatRouter = createTRPCRouter({
       });
 
       return message;
+    }),
+  viewChat: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const lcv = await ctx.prisma.lastChatView.findFirst({
+        where: { projectId: input, userId: ctx.session.user.id },
+      });
+
+      if (lcv) {
+        await ctx.prisma.lastChatView.update({
+          where: { id: lcv.id },
+          data: { date: new Date() },
+        });
+      } else {
+        await ctx.prisma.lastChatView.create({
+          data: { projectId: input, userId: ctx.session.user.id },
+        });
+      }
+
+      return {};
     }),
 });

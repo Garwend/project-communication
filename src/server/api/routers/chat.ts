@@ -40,30 +40,53 @@ export const chatRouter = createTRPCRouter({
       },
     });
   }),
-  getMessages: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.message.findMany({
-      where: {
-        projectId: input,
-        project: {
-          OR: [
-            { ownerId: ctx.session.user.id },
-            { participants: { some: { userId: ctx.session.user.id } } },
-          ],
-        },
-      },
-      include: {
-        createdBy: {
-          select: {
-            name: true,
-            email: true,
+  getMessages: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.string(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor } = input;
+      const limit = 10;
+
+      const items = await ctx.prisma.message.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        where: {
+          projectId: input.projectId,
+          project: {
+            OR: [
+              { ownerId: ctx.session.user.id },
+              { participants: { some: { userId: ctx.session.user.id } } },
+            ],
           },
         },
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
-  }),
+        include: {
+          createdBy: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop();
+        nextCursor = nextItem?.id;
+      }
+
+      return {
+        items,
+        nextCursor,
+      };
+    }),
   createMessage: protectedProcedure
     .input(
       z.object({

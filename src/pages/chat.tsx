@@ -9,7 +9,7 @@ import SendMessage from "~/components/chat/SendMessage";
 
 import { api, type RouterOutputs } from "~/utils/api";
 
-type Message = RouterOutputs["chat"]["getMessages"][0];
+type Message = RouterOutputs["chat"]["getMessages"]["items"][0];
 
 type Props = {
   userId: string;
@@ -29,40 +29,74 @@ function ChatChannel({ userId, projectId, scrollBoxRef }: Props) {
     const data = message.data as MessageData;
 
     if (data.message.projectId === projectId) {
-      utils.chat.getMessages.setData(projectId, (old) => {
-        if (old) {
-          if (data.type === "create") {
-            setTimeout(() => {
-              if (scrollBoxRef && scrollBoxRef.current) {
-                scrollBoxRef.current.scrollIntoView();
-              }
-            }, 100);
+      utils.chat.getMessages.setInfiniteData(
+        { projectId: projectId },
+        (old) => {
+          if (old) {
+            if (data.type === "create") {
+              setTimeout(() => {
+                if (scrollBoxRef && scrollBoxRef.current) {
+                  scrollBoxRef.current.scrollIntoView();
+                }
+              }, 100);
 
-            return [
-              ...old,
-              { ...data.message, createdAt: new Date(data.message.createdAt) },
-            ];
-          }
-
-          if (data.type === "update") {
-            return old.map((message) =>
-              message.id === data.message.id
-                ? {
-                    ...data.message,
-                    createdAt: new Date(data.message.createdAt),
+              return {
+                ...old,
+                pages: old.pages.map((page, index) => {
+                  if (index === 0) {
+                    return {
+                      ...page,
+                      items: [
+                        {
+                          ...data.message,
+                          createdAt: new Date(data.message.createdAt),
+                        },
+                        ...page.items,
+                      ],
+                    };
                   }
-                : message
-            );
-          }
 
-          if (data.type === "delete") {
-            return old.filter((message) => message.id !== data.message.id);
-          }
+                  return {
+                    ...page,
+                  };
+                }),
+              };
+            }
 
+            if (data.type === "update") {
+              return {
+                ...old,
+                pages: old.pages.map((page) => ({
+                  ...page,
+                  items: page.items.map((message) =>
+                    message.id === data.message.id
+                      ? {
+                          ...data.message,
+                          createdAt: new Date(data.message.createdAt),
+                        }
+                      : message
+                  ),
+                })),
+              };
+            }
+
+            if (data.type === "delete") {
+              return {
+                ...old,
+                pages: old.pages.map((page) => ({
+                  ...page,
+                  items: page.items.filter(
+                    (message) => message.id !== data.message.id
+                  ),
+                })),
+              };
+            }
+
+            return old;
+          }
           return old;
         }
-        return old;
-      });
+      );
       void utils.chat.viewChat.invalidate(projectId);
     } else {
       void utils.chat.getAll.invalidate();

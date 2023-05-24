@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { useRouter } from "next/router";
 import { useChannel } from "@ably-labs/react-hooks";
 import { useSession } from "next-auth/react";
+import { MessagesSquare } from "lucide-react";
 
 import ChatList from "~/components/chat/ChatList";
 import MessageBox from "~/components/chat/MessageBox";
@@ -129,7 +130,14 @@ export default function Chat() {
           <MessageBox projectId={id} scrollBoxRef={ref} />
           <SendMessage projectId={id} />
         </div>
-      ) : null}
+      ) : (
+        <div className="flex flex-1 flex-col items-center justify-center gap-2">
+          <MessagesSquare className="h-72 w-72" />
+          <p className="text-2xl text-muted-foreground">
+            Wybierz czat z listy po lewej stronie.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

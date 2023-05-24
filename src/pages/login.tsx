@@ -51,7 +51,7 @@ export default function Login() {
   });
 
   return (
-    <Card className="w-[350px]">
+    <Card className="w-[350px] lg:w-[450px]">
       <CardHeader className="pb-0">
         <CardTitle className="text-2xl">Zaloguj się</CardTitle>
         <CardDescription>

@@ -1,5 +1,6 @@
 import ChatItem from "~/components/chat/ChatItem";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { Skeleton } from "../ui/skeleton";
 import { api } from "~/utils/api";
 
 const checkIfNewMessage = (messageDate?: Date, lastChatViewDate?: Date) => {
@@ -17,7 +18,11 @@ const checkIfNewMessage = (messageDate?: Date, lastChatViewDate?: Date) => {
 export default function ChatList() {
   const query = api.chat.getAll.useQuery();
 
-  if (query.isError || query.isLoading) {
+  if (query.isLoading) {
+    return <SkeletonLoading />;
+  }
+
+  if (query.isError) {
     return <section className="h-full w-64 border-r border-border"></section>;
   }
 
@@ -37,6 +42,17 @@ export default function ChatList() {
           />
         ))}
       </ScrollArea>
+    </section>
+  );
+}
+
+function SkeletonLoading() {
+  return (
+    <section className="flex h-full w-64 flex-col gap-3 border-r border-border pr-2">
+      <Skeleton className="h-16 w-full" />
+      <Skeleton className="h-16 w-full" />
+      <Skeleton className="h-16 w-full" />
+      <Skeleton className="h-16 w-full" />
     </section>
   );
 }

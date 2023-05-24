@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { Skeleton } from "~/components/ui/skeleton";
 import ProjectTitle from "~/components/projects/ProjectTitle";
 import ProjectStage from "~/components/projects/project-stage/ProjectStage";
 import FilesList from "~/components/files/FilesList";
@@ -19,7 +20,7 @@ export default function ProjectPage() {
   });
 
   if (query.isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSkeleton />;
   }
 
   if (query.error) {
@@ -59,6 +60,34 @@ export default function ProjectPage() {
           </section>
         </div>
       </ScrollArea>
+    </div>
+  );
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="flex h-full w-full flex-col">
+      <div className="flex h-10 flex-shrink-0 flex-row items-center justify-between">
+        <Skeleton className="h-9 w-24" />
+        <div className="flex flex-row -space-x-3">
+          <Skeleton className="z-[1] h-9 w-9 rounded-full border border-background" />
+          <Skeleton className="z-[1] h-9 w-9 rounded-full border border-background" />
+          <Skeleton className="z-[1] h-9 w-9 rounded-full border border-background" />
+        </div>
+      </div>
+      <Separator className="mb-2 mt-2" />
+      <div className="flex flex-1">
+        <section className="flex flex-[0_0_60%] flex-row justify-between gap-4">
+          <Skeleton className="h-full flex-1" />
+          <Skeleton className="h-full flex-1" />
+          <Skeleton className="h-full flex-1" />
+        </section>
+        <section className="flex flex-[0_0_40%] flex-col items-center gap-4">
+          <Skeleton className="w-11/12 flex-1" />
+          <Skeleton className="w-11/12 flex-1" />
+          <Skeleton className="w-11/12 flex-1" />
+        </section>
+      </div>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { columns } from "~/components/tasks/table/columns";
 import TasksTable from "~/components/tasks/table/TasksTable";
 import TaskDetails from "~/components/tasks/TaskDetails";
 import { Skeleton } from "~/components/ui/skeleton";
+import ErrorMessage from "~/components/ui/error-message";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
@@ -13,7 +14,11 @@ const Home: NextPage = () => {
   }
 
   if (query.error) {
-    return null;
+    return (
+      <div className="flex h-full flex-col items-center justify-center">
+        <ErrorMessage message="Nie udało się załadować zadań" />
+      </div>
+    );
   }
 
   return (

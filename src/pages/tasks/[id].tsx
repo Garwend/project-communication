@@ -9,6 +9,7 @@ import TaskDetailsHeader from "~/components/tasks/TaskDetailsHeader";
 import CustomLinkify from "~/components/ui/custom-linkify";
 import { Skeleton } from "~/components/ui/skeleton";
 import { toastError } from "~/components/ui/toast";
+import ErrorMessage from "~/components/ui/error-message";
 import { api } from "~/utils/api";
 
 export default function TaskPage() {
@@ -77,8 +78,8 @@ export default function TaskPage() {
 
   if (query.error) {
     return (
-      <div>
-        <h1>Nie znaleziono zadania</h1>
+      <div className="flex h-full w-full items-center justify-center">
+        <ErrorMessage message="Nie znaleziono zadania" />
       </div>
     );
   }

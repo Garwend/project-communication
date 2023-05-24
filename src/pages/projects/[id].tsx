@@ -10,6 +10,7 @@ import InviteUser from "~/components/invites/InviteUser";
 import ProjectOptions from "~/components/projects/ProjectOptions";
 import ParticipantsList from "~/components/projects/participants/ParticipantsList";
 import Tasks from "~/components/tasks/Tasks";
+import ErrorMessage from "~/components/ui/error-message";
 import { api } from "../../utils/api";
 
 export default function ProjectPage() {
@@ -25,8 +26,8 @@ export default function ProjectPage() {
 
   if (query.error) {
     return (
-      <div>
-        <h1>Nie znaleziono projektu</h1>
+      <div className="flex h-full w-full items-center justify-center">
+        <ErrorMessage message="Nie znaleziono projektu" />
       </div>
     );
   }

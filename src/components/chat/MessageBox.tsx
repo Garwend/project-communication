@@ -1,6 +1,8 @@
 import React from "react";
 import { useInView } from "react-intersection-observer";
 import { useSession } from "next-auth/react";
+import ErrorMessage from "../ui/error-message";
+import { Skeleton } from "../ui/skeleton";
 import Message from "./Message";
 import { api } from "~/utils/api";
 
@@ -35,10 +37,16 @@ export default function MessageBox({ projectId, scrollBoxRef }: Props) {
     }
   }, [inView, fetchNextPage]);
 
-  if (isLoading || error) {
+  if (error) {
     return (
-      <div className="w-full flex-1 overflow-auto rounded-md border px-2 pb-2"></div>
+      <div className="flex w-full flex-1 items-center justify-center overflow-auto rounded-md border px-2 pb-2">
+        <ErrorMessage message="Nie udało się załadować czatu" />
+      </div>
     );
+  }
+
+  if (isLoading) {
+    return <SkeletonLoading />;
   }
 
   return (
@@ -56,6 +64,24 @@ export default function MessageBox({ projectId, scrollBoxRef }: Props) {
         </React.Fragment>
       ))}
       <div ref={ref}></div>
+    </div>
+  );
+}
+
+function SkeletonLoading() {
+  return (
+    <div className="flex w-full flex-1 flex-col-reverse gap-4 overflow-auto rounded-md border px-2 pb-2">
+      <Skeleton className="h-12 w-36 max-w-[85%]" />
+      <Skeleton className="h-12 w-40 max-w-[85%] self-end" />
+      <Skeleton className="h-12 w-44 max-w-[85%]" />
+      <Skeleton className="h-24 w-96 max-w-[85%] self-end" />
+      <Skeleton className="h-12 w-36 max-w-[85%] self-end" />
+      <Skeleton className="h-12 w-36 max-w-[85%]" />
+      <Skeleton className="h-12 w-16 max-w-[85%]" />
+      <Skeleton className="h-12 w-60 max-w-[85%]" />
+      <Skeleton className="h-12 w-36 max-w-[85%] self-end" />
+      <Skeleton className="h-12 w-32 max-w-[85%] self-end" />
+      <Skeleton className="h-12 w-36 max-w-[85%]" />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import ChatItem from "~/components/chat/ChatItem";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
+import { XOctagon } from "lucide-react";
 import { api } from "~/utils/api";
 
 const checkIfNewMessage = (messageDate?: Date, lastChatViewDate?: Date) => {
@@ -23,7 +24,27 @@ export default function ChatList() {
   }
 
   if (query.isError) {
-    return <section className="h-full w-64 border-r border-border"></section>;
+    return (
+      <section className="flex h-full w-64 items-center justify-center border-r border-border pr-2">
+        <div className="flex flex-col items-center">
+          <XOctagon className="h-8 w-8 text-destructive" />
+          <p className="mt-2 text-center text-sm font-bold text-muted-foreground">
+            Nie udało się załadować listy czatów
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  if (query.data.length === 0) {
+    return (
+      <section className="flex h-full w-64 items-center justify-center border-r border-border pr-2">
+        <p className="text-center text-sm font-bold text-muted-foreground">
+          Gdy dołączysz lub stworzysz projekt pojawi się tutaj czat dotyczący
+          tego projektu.
+        </p>
+      </section>
+    );
   }
 
   return (

@@ -231,7 +231,8 @@ export default function Tasks({ id, project }: Props) {
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
       >
-        <div className="flex h-[calc(100vh-12rem)] flex-row gap-2">
+        {/* h-[calc(100vh-12rem)] */}
+        <div className="flex h-[calc(60vh-12rem)] flex-row gap-2">
           <TasksGroup
             id={id}
             title="Oczekiwanie na realizacje"

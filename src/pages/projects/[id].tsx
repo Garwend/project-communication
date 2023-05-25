@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
 import { ScrollArea } from "~/components/ui/scroll-area";
@@ -11,10 +12,15 @@ import ProjectOptions from "~/components/projects/ProjectOptions";
 import ParticipantsList from "~/components/projects/participants/ParticipantsList";
 import Tasks from "~/components/tasks/Tasks";
 import ErrorMessage from "~/components/ui/error-message";
+import MessageBox from "~/components/chat/MessageBox";
+import { Textarea } from "~/components/ui/textarea";
+import { Button } from "~/components/ui/button";
+import { Send } from "lucide-react";
 import { api } from "../../utils/api";
 
 export default function ProjectPage() {
   const id = useRouter().query.id as string;
+  const ref = useRef<HTMLDivElement>(null);
   const query = api.projects.getById.useQuery(id, {
     retry: false,
     enabled: typeof id === "string",
@@ -50,19 +56,65 @@ export default function ProjectPage() {
       </header>
       <Separator className="mb-2 mt-2" />
       <ScrollArea>
-        <div className="flex flex-row">
-          <section className="flex-[0_0_60%]">
-            <Tasks id={id} project={query.data} />
-          </section>
-          <section className="flex flex-[0_0_40%] flex-col items-center gap-4">
+        <div className="flex flex-col gap-4 pr-4">
+          <section className="flex flex-row gap-4">
             <ProjectStage id={id} />
             <FilesList id={id} />
             <WaitingForList id={id} />
+          </section>
+          <section>
+            <Tasks id={id} project={query.data} />
+          </section>
+          <section className="flex h-[600px] flex-col gap-2 rounded-md border p-2">
+            <p className="text-lg font-semibold">Czat</p>
+            <MessageBox projectId={id} scrollBoxRef={ref} />
+            <section className="flex w-full flex-row items-end gap-2">
+              <Textarea
+                placeholder="Wiadomość..."
+                className="h-10 resize-none transition-all focus:h-24"
+                disabled={true}
+              />
+              <Button className="h-10 w-10 flex-shrink-0 p-0">
+                <Send className="h-5 w-5" />
+              </Button>
+            </section>
           </section>
         </div>
       </ScrollArea>
     </div>
   );
+
+  // return (
+  //   <div className="flex h-full w-full flex-col">
+  //     <header className="flex h-10 flex-shrink-0 flex-row items-center justify-between">
+  //       <div className="flex flex-row gap-2">
+  //         <ProjectTitle project={query.data} />
+  //         <ProjectOptions
+  //           id={id}
+  //           ownerId={query.data.ownerId}
+  //           status={query.data.status}
+  //         />
+  //       </div>
+  //       <div className="flex flex-row items-center gap-4">
+  //         <ParticipantsList id={id} />
+  //         <InviteUser id={id} ownerId={query.data.ownerId} />
+  //       </div>
+  //     </header>
+  //     <Separator className="mb-2 mt-2" />
+  //     <ScrollArea>
+  //       <div className="flex flex-row">
+  //         <section className="flex-[0_0_60%]">
+  //           <Tasks id={id} project={query.data} />
+  //         </section>
+  //         <section className="flex flex-[0_0_40%] flex-col items-center gap-4">
+  //           <ProjectStage id={id} />
+  //           <FilesList id={id} />
+  //           <WaitingForList id={id} />
+  //         </section>
+  //       </div>
+  //     </ScrollArea>
+  //   </div>
+  // );
 }
 
 function LoadingSkeleton() {

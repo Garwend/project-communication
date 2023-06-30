@@ -81,3 +81,9 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
+
+[contenteditable="true"]:empty:before {
+  content: attr(placeholder);
+  pointer-events: none;
+  display: block; /* For Firefox */
+}

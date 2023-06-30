@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { Separator } from "~/components/ui/separator";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -15,11 +16,12 @@ import ErrorMessage from "~/components/ui/error-message";
 import MessageBox from "~/components/chat/MessageBox";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
-import { Send } from "lucide-react";
-import { api } from "../../utils/api";
+import { Send, LayoutTemplate, Home } from "lucide-react";
+import { api } from "../../../utils/api";
 
 export default function ProjectPage() {
-  const id = useRouter().query.id as string;
+  const router = useRouter();
+  const id = router.query.id as string;
   const ref = useRef<HTMLDivElement>(null);
   const query = api.projects.getById.useQuery(id, {
     retry: false,
@@ -54,6 +56,30 @@ export default function ProjectPage() {
           <InviteUser id={id} ownerId={query.data.ownerId} />
         </div>
       </header>
+      <nav className="flex flex-row gap-4">
+        <Link href={`/projects/${id}`} legacyBehavior>
+          <a className="inline-flex flex-col items-center">
+            <div className="inline-flex items-center">
+              <Home className="mr-2 h-4 w-4" />
+              <span className="truncate">Projekt</span>
+            </div>
+            {router.asPath === `/projects/${id}` ? (
+              <div className="w-full translate-y-[9px] border-b border-primary"></div>
+            ) : null}
+          </a>
+        </Link>
+        <Link href={`/projects/${id}/plan`} legacyBehavior>
+          <a className="inline-flex flex-col items-center">
+            <div className="inline-flex items-center">
+              <LayoutTemplate className="mr-2 h-4 w-4" />
+              <span className="truncate">Plan projektu</span>
+            </div>
+            {router.asPath === `/projects/${id}/plan` ? (
+              <div className="w-full translate-y-[9px] border-b border-primary"></div>
+            ) : null}
+          </a>
+        </Link>
+      </nav>
       <Separator className="mb-2 mt-2" />
       <ScrollArea>
         <div className="flex flex-col gap-4 pr-4">

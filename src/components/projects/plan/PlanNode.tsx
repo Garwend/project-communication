@@ -9,7 +9,7 @@ export default function PlanNode() {
   return (
     <>
       <Handle type="target" position={Position.Top} />
-      <div className="group flex flex-col gap-4 bg-white p-3">
+      <div className="group flex flex-col gap-4 bg-white p-3 pb-1">
         <input
           id="text"
           name="text"

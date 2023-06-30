@@ -88,7 +88,11 @@ export default function ProjectPlanPage() {
         id: new Date().getTime().toString(),
         type: "planNode",
         data: {},
-        style: { background: "white", borderRadius: "4px" },
+        style: {
+          background: "white",
+          borderRadius: "4px",
+          paddingBottom: "8px",
+        },
         position: { x: 0, y: 0 },
       },
     ]);

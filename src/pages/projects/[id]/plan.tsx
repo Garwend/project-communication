@@ -7,7 +7,6 @@ import ReactFlow, {
   Background,
   useNodesState,
   useEdgesState,
-  Position,
   type OnConnect,
   type OnEdgeUpdateFunc,
   type Edge,

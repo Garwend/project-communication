@@ -1,16 +1,24 @@
 import React from "react";
-import { Handle, Position } from "reactflow";
+import { Handle, Position, type NodeProps, useReactFlow } from "reactflow";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
-import { Trash } from "lucide-react";
+import { Trash, X } from "lucide-react";
 
-export default function PlanNode() {
+export default function PlanNode({ id }: NodeProps) {
   const [items, setItems] = React.useState<string[]>([]);
+  const rf = useReactFlow();
+
+  const deleteNode = () => {
+    const node = rf.getNode(id);
+    if (node) {
+      rf.deleteElements({ nodes: [node] });
+    }
+  };
 
   return (
     <>
       <Handle type="target" position={Position.Top} />
-      <div className="group flex flex-col gap-4 bg-white p-3 pb-1">
+      <div className="group relative flex flex-col gap-4 bg-white p-3 pb-1">
         <input
           id="text"
           name="text"
@@ -49,6 +57,13 @@ export default function PlanNode() {
           }
         >
           Dodaj podpunkt
+        </Button>
+        <Button
+          variant="destructive"
+          className="absolute -right-2 -top-2 hidden h-5 w-5 rounded-full p-0 group-hover:inline-flex"
+          onClick={deleteNode}
+        >
+          <X className="h-3 w-3" />
         </Button>
       </div>
       <Handle type="source" position={Position.Bottom} />

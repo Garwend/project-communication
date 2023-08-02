@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useDebouncedValue } from "@mantine/hooks";
-import { Download } from "lucide-react";
+import { Download, Search } from "lucide-react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -43,11 +43,19 @@ export default function SearchDialog() {
 
   return (
     <>
-      <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
-        <span className="mr-8">Szukaj...</span>
-        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-          <span className="text-xs">Ctrl k</span>
-        </kbd>
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => setOpen(true)}
+        className="px-2 sm:px-3"
+      >
+        <div className="hidden sm:block">
+          <span className="mr-8">Szukaj...</span>
+          <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+            <span className="text-xs">Ctrl k</span>
+          </kbd>
+        </div>
+        <Search className="sm:hidden" />
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput

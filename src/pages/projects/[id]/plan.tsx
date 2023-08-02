@@ -91,6 +91,7 @@ export default function ProjectPlanPage() {
           background: "white",
           borderRadius: "4px",
           paddingBottom: "8px",
+          border: "2px solid gray",
         },
         position: { x: 0, y: 0 },
       },
